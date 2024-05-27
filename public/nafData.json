@@ -1,0 +1,283 @@
+{
+  "sections": [
+    { "value": "A", "label": "A - Agriculture, sylviculture et pêche" },
+    { "value": "B", "label": "B - Industries extractives" },
+    { "value": "C", "label": "C - Industrie manufacturière" },
+    { "value": "D", "label": "D - Production et distribution d'électricité, de gaz, de vapeur et d'air conditionné" },
+    { "value": "E", "label": "E - Production et distribution d'eau ; assainissement, gestion des déchets et dépollution" },
+    { "value": "F", "label": "F - Construction" },
+    { "value": "G", "label": "G - Commerce ; réparation d'automobiles et de motocycles" },
+    { "value": "H", "label": "H - Transports et entreposage" },
+    { "value": "I", "label": "I - Hébergement et restauration" },
+    { "value": "J", "label": "J - Information et communication" },
+    { "value": "K", "label": "K - Activités financières et d'assurance" },
+    { "value": "L", "label": "L - Activités immobilières" },
+    { "value": "M", "label": "M - Activités spécialisées, scientifiques et techniques" },
+    { "value": "N", "label": "N - Activités de services administratifs et de soutien" },
+    { "value": "O", "label": "O - Administration publique" },
+    { "value": "P", "label": "P - Enseignement" },
+    { "value": "Q", "label": "Q - Santé humaine et action sociale" },
+    { "value": "R", "label": "R - Arts, spectacles et activités récréatives" },
+    { "value": "S", "label": "S - Autres activités de services" },
+    { "value": "T", "label": "T - Activités des ménages en tant qu'employeurs ; activités indifférenciées des ménages en tant que producteurs de biens et services pour usage propre" },
+    { "value": "U", "label": "U - Activités extra-territoriales" }
+  ],
+  "divisions": {
+    "A": [
+      { "value": "01", "label": "01 - Culture et production animale, chasse et services annexes" },
+      { "value": "02", "label": "02 - Sylviculture et exploitation forestière" },
+      { "value": "03", "label": "03 - Pêche et aquaculture" }
+    ],
+    "B": [
+      { "value": "05", "label": "05 - Extraction de houille et de lignite" },
+      { "value": "06", "label": "06 - Extraction d’hydrocarbures" },
+      { "value": "07", "label": "07 - Extraction de minerais métalliques" },
+      { "value": "08", "label": "08 - Autres industries extractives" },
+      { "value": "09", "label": "09 - Services de soutien aux industries extractives" }
+    ],
+    "C": [
+      { "value": "10", "label": "10 - Industries alimentaires" },
+      { "value": "11", "label": "11 - Fabrication de boissons" },
+      { "value": "12", "label": "12 - Fabrication de produits à base de tabac" },
+      { "value": "13", "label": "13 - Fabrication de textiles" },
+      { "value": "14", "label": "14 - Industrie de l'habillement" },
+      { "value": "15", "label": "15 - Industrie du cuir et de la chaussure" },
+      { "value": "16", "label": "16 - Travail du bois et fabrication d'articles en bois et en liège, à l'exception des meubles ; fabrication d'articles en vannerie et sparterie" },
+      { "value": "17", "label": "17 - Industrie du papier et du carton" },
+      { "value": "18", "label": "18 - Imprimerie et reproduction d'enregistrements" },
+      { "value": "19", "label": "19 - Cokéfaction et raffinage" },
+      { "value": "20", "label": "20 - Industrie chimique" },
+      { "value": "21", "label": "21 - Industrie pharmaceutique" },
+      { "value": "22", "label": "22 - Fabrication de produits en caoutchouc et en plastique" },
+      { "value": "23", "label": "23 - Fabrication d'autres produits minéraux non métalliques" },
+      { "value": "24", "label": "24 - Métallurgie" },
+      { "value": "25", "label": "25 - Fabrication de produits métalliques, à l'exception des machines et des équipements" },
+      { "value": "26", "label": "26 - Fabrication de produits informatiques, électroniques et optiques" },
+      { "value": "27", "label": "27 - Fabrication d'équipements électriques" },
+      { "value": "28", "label": "28 - Fabrication de machines et équipements n.c.a." },
+      { "value": "29", "label": "29 - Industrie automobile" },
+      { "value": "30", "label": "30 - Fabrication d'autres matériels de transport" },
+      { "value": "31", "label": "31 - Fabrication de meubles" },
+      { "value": "32", "label": "32 - Autres industries manufacturières" },
+      { "value": "33", "label": "33 - Réparation et installation de machines et d'équipements" }
+    ],
+    "D": [
+      { "value": "35", "label": "35 - Production et distribution d'électricité, de gaz, de vapeur et d'air conditionné" }
+    ],
+    "E": [
+      { "value": "36", "label": "36 - Captage, traitement et distribution d'eau" },
+      { "value": "37", "label": "37 - Collecte et traitement des eaux usées" },
+      { "value": "38", "label": "38 - Collecte, traitement et élimination des déchets ; récupération" },
+      { "value": "39", "label": "39 - Dépollution et autres services de gestion des déchets" }
+    ],
+    "F": [
+      { "value": "41", "label": "41 - Construction de bâtiments" },
+      { "value": "42", "label": "42 - Génie civil" },
+      { "value": "43", "label": "43 - Travaux de construction spécialisés" }
+    ],
+    "G": [
+      { "value": "45", "label": "45 - Commerce et réparation d'automobiles et de motocycles" },
+      { "value": "46", "label": "46 - Commerce de gros, à l'exception des automobiles et des motocycles" },
+      { "value": "47", "label": "47 - Commerce de détail, à l'exception des automobiles et des motocycles" }
+    ],
+    "H": [
+      { "value": "49", "label": "49 - Transports terrestres et transport par conduites" },
+      { "value": "50", "label": "50 - Transports par eau" },
+      { "value": "51", "label": "51 - Transports aériens" },
+      { "value": "52", "label": "52 - Entreposage et services auxiliaires des transports" },
+      { "value": "53", "label": "53 - Activités de poste et de courrier" }
+    ],
+    "I": [
+      { "value": "55", "label": "55 - Hébergement" },
+      { "value": "56", "label": "56 - Restauration" }
+    ],
+    "J": [
+      { "value": "58", "label": "58 - Édition" },
+      { "value": "59", "label": "59 - Production de films cinématographiques, de vidéo et de programmes de télévision ; enregistrement sonore et édition musicale" },
+      { "value": "60", "label": "60 - Programmation et diffusion" },
+      { "value": "61", "label": "61 - Télécommunications" },
+      { "value": "62", "label": "62 - Programmation, conseil et autres activités informatiques" },
+      { "value": "63", "label": "63 - Services d'information" }
+    ],
+    "K": [
+      { "value": "64", "label": "64 - Activités des services financiers, hors assurance et caisses de retraite" },
+      { "value": "65", "label": "65 - Assurance" },
+      { "value": "66", "label": "66 - Activités auxiliaires de services financiers et d'assurance" }
+    ],
+    "L": [
+      { "value": "68", "label": "68 - Activités immobilières" }
+    ],
+    "M": [
+      { "value": "69", "label": "69 - Activités juridiques et comptables" },
+      { "value": "70", "label": "70 - Activités des sièges sociaux ; conseil de gestion" },
+      { "value": "71", "label": "71 - Activités d'architecture et d'ingénierie ; activités de contrôle et analyses techniques" },
+      { "value": "72", "label": "72 - Recherche-développement scientifique" },
+      { "value": "73", "label": "73 - Publicité et études de marché" },
+      { "value": "74", "label": "74 - Autres activités spécialisées, scientifiques et techniques" },
+      { "value": "75", "label": "75 - Activités vétérinaires" }
+    ],
+    "N": [
+      { "value": "77", "label": "77 - Location et location-bail" },
+      { "value": "78", "label": "78 - Activités des agences de travail temporaire" },
+      { "value": "79", "label": "79 - Activités des agences de voyage, voyagistes, services de réservation et activités connexes" },
+      { "value": "80", "label": "80 - Enquêtes et sécurité" },
+      { "value": "81", "label": "81 - Services relatifs aux bâtiments et aménagement paysager" },
+      { "value": "82", "label": "82 - Activités administratives et autres activités de soutien aux entreprises" }
+    ],
+    "O": [
+      { "value": "84", "label": "84 - Administration publique et défense ; sécurité sociale obligatoire" }
+    ],
+    "P": [
+      { "value": "85", "label": "85 - Enseignement" }
+    ],
+    "Q": [
+      { "value": "86", "label": "86 - Activités pour la santé humaine" },
+      { "value": "87", "label": "87 - Hébergement médico-social et social" },
+      { "value": "88", "label": "88 - Action sociale sans hébergement" }
+    ],
+    "R": [
+      { "value": "90", "label": "90 - Activités créatives, artistiques et de spectacle" },
+      { "value": "91", "label": "91 - Bibliothèques, archives, musées et autres activités culturelles" },
+      { "value": "92", "label": "92 - Organisation de jeux de hasard et d'argent" },
+      { "value": "93", "label": "93 - Activités sportives, récréatives et de loisirs" }
+    ],
+    "S": [
+      { "value": "94", "label": "94 - Activités des organisations associatives" },
+      { "value": "95", "label": "95 - Réparation d'ordinateurs et de biens personnels et domestiques" },
+      { "value": "96", "label": "96 - Autres services personnels" }
+    ],
+    "T": [
+      { "value": "97", "label": "97 - Activités des ménages en tant qu'employeurs de personnel domestique" },
+      { "value": "98", "label": "98 - Activités indifférenciées des ménages en tant que producteurs de biens et services pour usage propre" }
+    ],
+    "U": [
+      { "value": "99", "label": "99 - Activités extra-territoriales" }
+    ]
+  },
+  "groups": {
+    "01": [
+      { "value": "01.1", "label": "01.1 - Cultures non permanentes" },
+      { "value": "01.2", "label": "01.2 - Cultures permanentes" },
+      { "value": "01.3", "label": "01.3 - Reproduction de plantes" },
+      { "value": "01.4", "label": "01.4 - Production animale" },
+      { "value": "01.5", "label": "01.5 - Culture et élevage associés" },
+      { "value": "01.6", "label": "01.6 - Activités de soutien à l’agriculture et traitement primaire des récoltes" },
+      { "value": "01.7", "label": "01.7 - Chasse, piégeage et services annexes" }
+    ],
+    "02": [
+      { "value": "02.1", "label": "02.1 - Sylviculture et autres activités forestières" },
+      { "value": "02.2", "label": "02.2 - Exploitation forestière" },
+      { "value": "02.3", "label": "02.3 - Services de soutien à l'exploitation forestière" }
+    ],
+    "03": [
+      { "value": "03.1", "label": "03.1 - Pêche" },
+      { "value": "03.2", "label": "03.2 - Aquaculture" }
+    ],
+    "05": [
+      { "value": "05.1", "label": "05.1 - Extraction de houille" },
+      { "value": "05.2", "label": "05.2 - Extraction de lignite" }
+    ],
+    "06": [
+      { "value": "06.1", "label": "06.1 - Extraction de pétrole brut" },
+      { "value": "06.2", "label": "06.2 - Extraction de gaz naturel" }
+    ],
+    "07": [
+      { "value": "07.1", "label": "07.1 - Extraction de minerais de fer" },
+      { "value": "07.2", "label": "07.2 - Extraction de minerais métalliques non ferreux" }
+    ],
+    "08": [
+      { "value": "08.1", "label": "08.1 - Extraction de pierres, de sables et d'argiles" },
+      { "value": "08.9", "label": "08.9 - Extraction minière n.c.a." }
+    ],
+    "09": [
+      { "value": "09.1", "label": "09.1 - Activités de soutien à l'extraction d'hydrocarbures" },
+      { "value": "09.9", "label": "09.9 - Activités de soutien aux autres industries extractives" }
+    ],
+    "10": [
+      { "value": "10.1", "label": "10.1 - Transformation et conservation de la viande et préparation de produits à base de viande" },
+      { "value": "10.2", "label": "10.2 - Transformation et conservation de poisson, de crustacés et de mollusques" },
+      { "value": "10.3", "label": "10.3 - Transformation et conservation de fruits et de légumes" },
+      { "value": "10.4", "label": "10.4 - Fabrication d'huiles et graisses végétales et animales" },
+      { "value": "10.5", "label": "10.5 - Fabrication de produits laitiers" },
+      { "value": "10.6", "label": "10.6 - Fabrication de produits de mouture, de produits amylacés et de produits alimentaires pour animaux" },
+      { "value": "10.7", "label": "10.7 - Fabrication de produits de boulangerie-pâtisserie et de pâtes alimentaires" },
+      { "value": "10.8", "label": "10.8 - Fabrication d'autres produits alimentaires" },
+      { "value": "10.9", "label": "10.9 - Fabrication d'aliments pour animaux" }
+    ],
+    "11": [
+      { "value": "11.0", "label": "11.0 - Fabrication de boissons" }
+    ],
+    "12": [
+      { "value": "12.0", "label": "12.0 - Fabrication de produits à base de tabac" }
+    ],
+    "13": [
+      { "value": "13.1", "label": "13.1 - Préparation et filature de fibres textiles" },
+      { "value": "13.2", "label": "13.2 - Tissage" },
+      { "value": "13.3", "label": "13.3 - Ennoblissement textile" },
+      { "value": "13.9", "label": "13.9 - Fabrication d'autres textiles" }
+    ],
+    "14": [
+      { "value": "14.1", "label": "14.1 - Fabrication de vêtements, à l'exception des vêtements en fourrure" },
+      { "value": "14.2", "label": "14.2 - Fabrication d'articles en fourrure" },
+      { "value": "14.3", "label": "14.3 - Fabrication d'articles à mailles" }
+    ],
+    "15": [
+      { "value": "15.1", "label": "15.1 - Tannerie et préparation des cuirs ; fabrication d'articles de voyage, de maroquinerie et de sellerie" },
+      { "value": "15.2", "label": "15.2 - Fabrication de chaussures" }
+    ],
+    "16": [
+      { "value": "16.1", "label": "16.1 - Sciage et rabotage du bois" },
+      { "value": "16.2", "label": "16.2 - Fabrication d'articles en bois, liège, vannerie et sparterie" }
+    ],
+    "17": [
+      { "value": "17.1", "label": "17.1 - Fabrication de pâte à papier, de papier et de carton" },
+      { "value": "17.2", "label": "17.2 - Fabrication d'articles en papier ou en carton" }
+    ],
+    "18": [
+      { "value": "18.1", "label": "18.1 - Imprimerie et services annexes" },
+      { "value": "18.2", "label": "18.2 - Reproduction d'enregistrements" }
+    ],
+    "19": [
+      { "value": "19.1", "label": "19.1 - Cokéfaction" },
+      { "value": "19.2", "label": "19.2 - Raffinage du pétrole" }
+    ],
+    "20": [
+      { "value": "20.1", "label": "20.1 - Industrie chimique de base" },
+      { "value": "20.2", "label": "20.2 - Fabrication de pesticides et d'autres produits agrochimiques" },
+      { "value": "20.3", "label": "20.3 - Fabrication de peintures, vernis, encres et mastics" },
+      { "value": "20.4", "label": "20.4 - Fabrication de savons, de produits d'entretien et de parfums" },
+      { "value": "20.5", "label": "20.5 - Fabrication d'autres produits chimiques" },
+      { "value": "20.6", "label": "20.6 - Fabrication de fibres artificielles ou synthétiques" }
+    ],
+    "21": [
+      { "value": "21.1", "label": "21.1 - Fabrication de produits pharmaceutiques de base" },
+      { "value": "21.2", "label": "21.2 - Fabrication de préparations pharmaceutiques" }
+    ],
+    "99": [
+      { "value": "99.0", "label": "99.0 - Activités des organisations et organismes extraterritoriaux" }
+    ]
+  },
+  
+  "classes": {
+    "01.1": [
+      { "value": "01.11", "label": "01.11 - Culture de céréales (à l’exception du riz), de légumineuses et de graines oléagineuses" },
+      { "value": "01.12", "label": "01.12 - Culture du riz" },
+      { "value": "01.13", "label": "01.13 - Culture de légumes, de melons, de racines et de tubercules" },
+      { "value": "01.14", "label": "01.14 - Culture de la canne à sucre" },
+      { "value": "01.15", "label": "01.15 - Culture du tabac" },
+      { "value": "01.16", "label": "01.16 - Culture de plantes à fibres" },
+      { "value": "01.19", "label": "01.19 - Autres cultures non permanentes" }
+    ],
+    "10.1": [
+      { "value": "10.11", "label": "10.11 - Transformation et conservation de la viande de boucherie" }
+    ]
+  },
+  "subclasses": {
+    "01.11": [
+      { "value": "01.11Z", "label": "01.11Z - Culture de céréales (à l’exception du riz), de légumineuses et de graines oléagineuses" }
+    ],
+    "10.11": [
+      { "value": "10.11Z", "label": "10.11Z - Transformation et conservation de la viande de boucherie" }
+    ]
+  }
+}
