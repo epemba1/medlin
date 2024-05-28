@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Grid, FormControl, Skeleton, AlertTitle, Alert, TextField, InputAdornment, Paper, List, ListItem, ListItemText, Chip } from '@mui/material';
+import { Container, Typography, Box, Grid, FormControl, Skeleton, Snackbar, Chip, Button, IconButton, Alert, AlertTitle } from '@mui/material';
 import Select from 'react-select';
 import axios from 'axios';
-import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const SelectionActivite = () => {
   const [data, setData] = useState(null);
@@ -12,9 +15,10 @@ const SelectionActivite = () => {
   const [selectedClasses, setSelectedClasses] = useState([]);
   const [selectedSubclass, setSelectedSubclass] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedActivities, setSelectedActivities] = useState([]);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -25,7 +29,30 @@ const SelectionActivite = () => {
         })
         .catch(error => console.error('Error loading data:', error));
     }, 2000);
+
+    const savedSelectedSection = localStorage.getItem('selectedSection');
+    const savedSelectedDivision = localStorage.getItem('selectedDivision');
+    const savedSelectedGroup = localStorage.getItem('selectedGroup');
+    const savedSelectedClasses = localStorage.getItem('selectedClasses');
+    const savedSelectedSubclass = localStorage.getItem('selectedSubclass');
+    const savedSelectedActivities = localStorage.getItem('selectedActivities');
+
+    if (savedSelectedSection) setSelectedSection(JSON.parse(savedSelectedSection));
+    if (savedSelectedDivision) setSelectedDivision(JSON.parse(savedSelectedDivision));
+    if (savedSelectedGroup) setSelectedGroup(JSON.parse(savedSelectedGroup));
+    if (savedSelectedClasses) setSelectedClasses(JSON.parse(savedSelectedClasses));
+    if (savedSelectedSubclass) setSelectedSubclass(JSON.parse(savedSelectedSubclass));
+    if (savedSelectedActivities) setSelectedActivities(JSON.parse(savedSelectedActivities));
   }, []);
+
+  const saveToLocalStorage = () => {
+    localStorage.setItem('selectedSection', JSON.stringify(selectedSection));
+    localStorage.setItem('selectedDivision', JSON.stringify(selectedDivision));
+    localStorage.setItem('selectedGroup', JSON.stringify(selectedGroup));
+    localStorage.setItem('selectedClasses', JSON.stringify(selectedClasses));
+    localStorage.setItem('selectedSubclass', JSON.stringify(selectedSubclass));
+    localStorage.setItem('selectedActivities', JSON.stringify(selectedActivities));
+  };
 
   const handleSectionChange = (selectedOption) => {
     setSelectedSection(selectedOption);
@@ -33,6 +60,8 @@ const SelectionActivite = () => {
     setSelectedGroup(null);
     setSelectedClasses([]);
     setSelectedSubclass(null);
+    updateSelectedActivities(selectedOption);
+    saveToLocalStorage();
   };
 
   const handleDivisionChange = (selectedOption) => {
@@ -40,55 +69,67 @@ const SelectionActivite = () => {
     setSelectedGroup(null);
     setSelectedClasses([]);
     setSelectedSubclass(null);
+    updateSelectedActivities(selectedOption);
+    saveToLocalStorage();
   };
 
   const handleGroupChange = (selectedOption) => {
     setSelectedGroup(selectedOption);
     setSelectedClasses([]);
     setSelectedSubclass(null);
+    updateSelectedActivities(selectedOption);
+    saveToLocalStorage();
   };
 
   const handleClassChange = (selectedOptions) => {
     setSelectedClasses(selectedOptions);
     setSelectedSubclass(null);
+    updateSelectedActivities(selectedOptions);
+    saveToLocalStorage();
   };
 
   const handleSubclassChange = (selectedOption) => {
     setSelectedSubclass(selectedOption);
+    updateSelectedActivities(selectedOption);
+    saveToLocalStorage();
   };
 
-  const handleSearchChange = (event) => {
-    const query = event.target.value;
-    setSearchQuery(query);
-
-    if (query) {
-      const allOptions = [
-        ...data.sections,
-        ...Object.values(data.divisions).flat(),
-        ...Object.values(data.groups).flat(),
-        ...Object.values(data.classes).flat(),
-        ...Object.values(data.subclasses).flat()
-      ];
-      const filtered = allOptions.filter(option =>
-        option.label.toLowerCase().includes(query.toLowerCase())
+  const updateSelectedActivities = (option) => {
+    if (Array.isArray(option)) {
+      const uniqueOptions = option.filter(
+        (opt) => !selectedActivities.some(activity => activity.value === opt.value)
       );
-      setFilteredOptions(filtered);
+      setSelectedActivities([...selectedActivities, ...uniqueOptions]);
     } else {
-      setFilteredOptions([]);
+      const alreadySelected = selectedActivities.some(activity => activity.value === option.value);
+      if (!alreadySelected) {
+        setSelectedActivities([...selectedActivities, option]);
+      }
     }
-  };
-
-  const handleResultClick = (option) => {
-    const alreadySelected = selectedActivities.some(activity => activity.value === option.value);
-    if (!alreadySelected) {
-      setSelectedActivities([...selectedActivities, option]);
-    }
-    setSearchQuery('');
-    setFilteredOptions([]);
+    saveToLocalStorage();
   };
 
   const handleDeleteActivity = (activityToDelete) => {
     setSelectedActivities(selectedActivities.filter(activity => activity.value !== activityToDelete.value));
+    saveToLocalStorage();
+  };
+
+  const handleNext = () => {
+    if (!selectedSection || !selectedDivision || !selectedGroup || selectedClasses.length === 0 || !selectedSubclass) {
+      setAlertMessage('Veuillez sélectionner toutes les options avant de continuer.');
+      setOpenSnackbar(true);
+    } else {
+      setAlertMessage('');
+      navigate('/localisation-implantation');
+    }
+  };
+
+  const handleBack = () => {
+    navigate('/');
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   if (loading) {
@@ -117,37 +158,27 @@ const SelectionActivite = () => {
 
   return (
     <Container>
-      <Box display="flex" alignItems="center" justifyContent="space-between" position="relative">
+      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
         <Typography variant="h4" gutterBottom>
           Sélection de l'Activité
         </Typography>
-        <Box display="flex" alignItems="center" style={{ marginLeft: '20px', position: 'relative' }}>
-          <TextField
+        <Box display="flex" alignItems="center">
+          <Button
             variant="outlined"
-            placeholder="Rechercher une activité..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            style={{ maxWidth: '300px', marginRight: '10px', height: '40px' }}
-            InputProps={{
-              style: { height: '40px' },
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          {filteredOptions.length > 0 && (
-            <Paper style={{ position: 'absolute', zIndex: 1, width: '300px', maxHeight: '200px', overflowY: 'auto', top: '45px' }}>
-              <List>
-                {filteredOptions.slice(0, 7).map(option => (
-                  <ListItem button key={option.value} onClick={() => handleResultClick(option)}>
-                    <ListItemText primary={option.label} />
-                  </ListItem>
-                ))}
-              </List>
-            </Paper>
-          )}
+            onClick={handleBack}
+            startIcon={<ArrowBackIcon />}
+            style={{ marginRight: 10 }}
+          >
+            Retour
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleNext}
+            endIcon={<NavigateNextIcon />}
+          >
+            Suivant
+          </Button>
         </Box>
       </Box>
       {selectedActivities.length > 0 && (
@@ -160,13 +191,26 @@ const SelectionActivite = () => {
               <Chip
                 key={activity.value}
                 label={activity.label}
-                color="primary"
+                style={{ backgroundColor: 'white', color: 'blue', borderColor: 'blue' }}
                 onDelete={() => handleDeleteActivity(activity)}
+                deleteIcon={<span style={{ color: 'grey' }}>×</span>}
+                variant="outlined"
               />
             ))}
           </Box>
         </Box>
       )}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+        message={alertMessage}
+        action={
+          <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      />
       <br />
       <Alert variant="outlined" severity="info">
         <AlertTitle>Veuillez choisir ci-dessous l'activité souhaitée.</AlertTitle>
