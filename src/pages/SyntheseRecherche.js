@@ -3,8 +3,8 @@ import React from 'react';
 const MySecrets = () => {
   return (
     <div>
-      <h1>My Secrets</h1>
-      <p>Manage your secrets here.</p>
+      <h1>Synthèse de la recherche</h1>
+      <p>Veuille trouver ci-dessous les resultats issu de votre étude.</p>
     </div>
   );
 };

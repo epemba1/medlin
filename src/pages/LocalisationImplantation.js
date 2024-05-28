@@ -3,8 +3,8 @@ import React from 'react';
 const MyFiles = () => {
   return (
     <div>
-      <h1>My Files</h1>
-      <p>Manage your files here.</p>
+      <h1>Localisation de la zone d'implantation</h1>
+      
     </div>
   );
 };
