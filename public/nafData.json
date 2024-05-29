@@ -1706,11 +1706,1304 @@
   ]
 },
   "subclasses": {
-    "01.11": [
-      { "value": "01.11Z", "label": "01.11Z - Culture de céréales (à l’exception du riz), de légumineuses et de graines oléagineuses" }
-    ],
-    "10.11": [
-      { "value": "10.11Z", "label": "10.11Z - Transformation et conservation de la viande de boucherie" }
-    ]
+     "01.11": [
+    { "value": "01.11Z", "label": "01.11Z - Culture de céréales (à l’exception du riz), de légumineuses et de graines oléagineuses" }
+  ],
+  "01.12": [
+    { "value": "01.12Z", "label": "01.12Z - Culture du riz" }
+  ],
+  "01.13": [
+    { "value": "01.13Z", "label": "01.13Z - Culture de légumes, de melons, de racines et de tubercules" }
+  ],
+  "01.14": [
+    { "value": "01.14Z", "label": "01.14Z - Culture de la canne à sucre" }
+  ],
+  "01.15": [
+    { "value": "01.15Z", "label": "01.15Z - Culture du tabac" }
+  ],
+  "01.16": [
+    { "value": "01.16Z", "label": "01.16Z - Culture de plantes à fibres" }
+  ],
+  "01.19": [
+    { "value": "01.19Z", "label": "01.19Z - Autres cultures non permanentes" }
+  ],
+  "01.21": [
+    { "value": "01.21Z", "label": "01.21Z - Culture de la vigne" }
+  ],
+  "01.22": [
+    { "value": "01.22Z", "label": "01.22Z - Culture de fruits tropicaux et subtropicaux" }
+  ],
+  "01.23": [
+    { "value": "01.23Z", "label": "01.23Z - Culture d'agrumes" }
+  ],
+  "01.24": [
+    { "value": "01.24Z", "label": "01.24Z - Culture de fruits à pépins et à noyau" }
+  ],
+  "01.25": [
+    { "value": "01.25Z", "label": "01.25Z - Culture d'autres fruits d'arbres ou d'arbustes et de fruits à coque" }
+  ],
+  "01.26": [
+    { "value": "01.26Z", "label": "01.26Z - Culture de fruits oléagineux" }
+  ],
+  "01.27": [
+    { "value": "01.27Z", "label": "01.27Z - Culture de plantes à boissons" }
+  ],
+  "01.28": [
+    { "value": "01.28Z", "label": "01.28Z - Culture de plantes à épices, aromatiques, médicinales et pharmaceutiques" }
+  ],
+  "01.29": [
+    { "value": "01.29Z", "label": "01.29Z - Autres cultures permanentes" }
+  ],
+  "01.30": [
+    { "value": "01.30Z", "label": "01.30Z - Reproduction de plantes" }
+  ],
+  "01.41": [
+    { "value": "01.41Z", "label": "01.41Z - Élevage de vaches laitières" }
+  ],
+  "01.42": [
+    { "value": "01.42Z", "label": "01.42Z - Élevage d'autres bovins et de buffles" }
+  ],
+  "01.43": [
+    { "value": "01.43Z", "label": "01.43Z - Élevage de chevaux et d'autres équidés" }
+  ],
+  "01.44": [
+    { "value": "01.44Z", "label": "01.44Z - Élevage de chameaux et d'autres camélidés" }
+  ],
+  "01.45": [
+    { "value": "01.45Z", "label": "01.45Z - Élevage d'ovins et de caprins" }
+  ],
+  "01.46": [
+    { "value": "01.46Z", "label": "01.46Z - Élevage de porcins" }
+  ],
+  "01.47": [
+    { "value": "01.47Z", "label": "01.47Z - Élevage de volailles" }
+  ],
+  "01.49": [
+    { "value": "01.49Z", "label": "01.49Z - Élevage d'autres animaux" }
+  ],
+  "01.50": [
+    { "value": "01.50Z", "label": "01.50Z - Culture et élevage associés" }
+  ],
+  "01.61": [
+    { "value": "01.61Z", "label": "01.61Z - Activités de soutien aux cultures" }
+  ],
+  "01.62": [
+    { "value": "01.62Z", "label": "01.62Z - Activités de soutien à la production animale" }
+  ],
+  "01.63": [
+    { "value": "01.63Z", "label": "01.63Z - Traitement primaire des récoltes" }
+  ],
+  "01.64": [
+    { "value": "01.64Z", "label": "01.64Z - Traitement des semences" }
+  ],
+  "01.70": [
+    { "value": "01.70Z", "label": "01.70Z - Chasse, piégeage et services annexes" }
+  ],
+  "02.10": [
+    { "value": "02.10Z", "label": "02.10Z - Sylviculture et autres activités forestières" }
+  ],
+  "02.20": [
+    { "value": "02.20Z", "label": "02.20Z - Exploitation forestière" }
+  ],
+  "02.30": [
+    { "value": "02.30Z", "label": "02.30Z - Récolte de produits forestiers non ligneux poussant à l'état sauvage" }
+  ],
+  "02.40": [
+    { "value": "02.40Z", "label": "02.40Z - Services de soutien à l'exploitation forestière" }
+  ],
+  "03.11": [
+    { "value": "03.11Z", "label": "03.11Z - Pêche en mer" }
+  ],
+  "03.12": [
+    { "value": "03.12Z", "label": "03.12Z - Pêche en eau douce" }
+  ],
+  "03.21": [
+    { "value": "03.21Z", "label": "03.21Z - Aquaculture en mer" }
+  ],
+  "03.22": [
+    { "value": "03.22Z", "label": "03.22Z - Aquaculture en eau douce" }
+  ],
+  "05.10": [
+    { "value": "05.10Z", "label": "05.10Z - Extraction de houille" }
+  ],
+  "05.20": [
+    { "value": "05.20Z", "label": "05.20Z - Extraction de lignite" }
+  ],
+  "06.10": [
+    { "value": "06.10Z", "label": "06.10Z - Extraction de pétrole brut" }
+  ],
+  "06.20": [
+    { "value": "06.20Z", "label": "06.20Z - Extraction de gaz naturel" }
+  ],
+  "07.10": [
+    { "value": "07.10Z", "label": "07.10Z - Extraction de minerais de fer" }
+  ],
+  "07.21": [
+    { "value": "07.21Z", "label": "07.21Z - Extraction de minerais d'uranium et de thorium" }
+  ],
+  "07.29": [
+    { "value": "07.29Z", "label": "07.29Z - Extraction d'autres minerais de métaux non ferreux" }
+  ],
+  "08.11": [
+    { "value": "08.11Z", "label": "08.11Z - Extraction de pierres ornementales et de construction" }
+  ],
+  "08.12": [
+    { "value": "08.12Z", "label": "08.12Z - Exploitation de gravières et sablières, extraction d'argiles et de kaolin" }
+  ],
+  "08.91": [
+    { "value": "08.91Z", "label": "08.91Z - Extraction des minéraux chimiques et d'engrais minéraux" }
+  ],
+  "08.92": [
+    { "value": "08.92Z", "label": "08.92Z - Extraction de tourbe" }
+  ],
+  "08.93": [
+    { "value": "08.93Z", "label": "08.93Z - Production de sel" }
+  ],
+  "08.99": [
+    { "value": "08.99Z", "label": "08.99Z - Autres activités extractives n.c.a." }
+  ],
+  "09.10": [
+    { "value": "09.10Z", "label": "09.10Z - Activités de soutien à l'extraction d'hydrocarbures" }
+  ],
+  "09.90": [
+    { "value": "09.90Z", "label": "09.90Z - Activités de soutien aux autres industries extractives" }
+  ],
+  "10.11": [
+    { "value": "10.11Z", "label": "10.11Z - Transformation et conservation de la viande de boucherie" }
+  ],
+  "10.12": [
+    { "value": "10.12Z", "label": "10.12Z - Transformation et conservation de la viande de volaille" }
+  ],
+  "10.13": [
+    { "value": "10.13A", "label": "10.13A - Préparation industrielle de produits à base de viande" },
+    { "value": "10.13B", "label": "10.13B - Charcuterie" }
+  ],
+  "10.20": [
+    { "value": "10.20Z", "label": "10.20Z - Transformation et conservation de poisson, de crustacés et de mollusques" }
+  ],
+  "10.31": [
+    { "value": "10.31Z", "label": "10.31Z - Transformation et conservation de pommes de terre" }
+  ],
+  "10.32": [
+    { "value": "10.32Z", "label": "10.32Z - Préparation de jus de fruits et légumes" }
+  ],
+  "10.39": [
+    { "value": "10.39A", "label": "10.39A - Autre transformation et conservation de fruits et légumes" },
+    { "value": "10.39B", "label": "10.39B - Transformation et conservation de fruits" }
+  ],
+  "10.41": [
+    { "value": "10.41A", "label": "10.41A - Fabrication d'huiles et graisses brutes" },
+    { "value": "10.41B", "label": "10.41B - Fabrication d'huiles et graisses raffinées" }
+  ],
+  "10.42": [
+    { "value": "10.42Z", "label": "10.42Z - Fabrication de margarine et graisses comestibles similaires" }
+  ],
+  "10.51": [
+    { "value": "10.51A", "label": "10.51A - Fabrication de lait liquide et de produits frais" },
+    { "value": "10.51B", "label": "10.51B - Fabrication de beurre" },
+    { "value": "10.51C", "label": "10.51C - Fabrication de fromage" },
+    { "value": "10.51D", "label": "10.51D - Fabrication de lait en poudre" },
+    { "value": "10.51E", "label": "10.51E - Fabrication d'autres produits laitiers" }
+  ],
+  "10.52": [
+    { "value": "10.52Z", "label": "10.52Z - Fabrication de glaces et sorbets" }
+  ],
+  "10.61": [
+    { "value": "10.61Z", "label": "10.61Z - Travail des grains" }
+  ],
+  "10.62": [
+    { "value": "10.62Z", "label": "10.62Z - Fabrication de produits amylacés" }
+  ],
+  "10.71": [
+    { "value": "10.71Z", "label": "10.71Z - Fabrication de pain et de pâtisserie fraîche" }
+  ],
+  "10.72": [
+    { "value": "10.72Z", "label": "10.72Z - Fabrication de biscottes, de biscuits et de pâtisseries de conservation" }
+  ],
+  "10.73": [
+    { "value": "10.73Z", "label": "10.73Z - Fabrication de pâtes alimentaires" }
+  ],
+  "10.81": [
+    { "value": "10.81Z", "label": "10.81Z - Fabrication de sucre" }
+  ],
+  "10.82": [
+    { "value": "10.82Z", "label": "10.82Z - Fabrication de cacao, chocolat et de produits de confiserie" }
+  ],
+  "10.83": [
+    { "value": "10.83Z", "label": "10.83Z - Transformation du thé et du café" }
+  ],
+  "10.84": [
+    { "value": "10.84Z", "label": "10.84Z - Fabrication de condiments et assaisonnements" }
+  ],
+  "10.85": [
+    { "value": "10.85Z", "label": "10.85Z - Fabrication de plats préparés" }
+  ],
+  "10.86": [
+    { "value": "10.86Z", "label": "10.86Z - Fabrication d'aliments homogénéisés et diététiques" }
+  ],
+  "10.89": [
+    { "value": "10.89Z", "label": "10.89Z - Fabrication d'autres produits alimentaires n.c.a." }
+  ],
+  "10.91": [
+    { "value": "10.91Z", "label": "10.91Z - Fabrication d'aliments pour animaux de ferme" }
+  ],
+  "10.92": [
+    { "value": "10.92Z", "label": "10.92Z - Fabrication d'aliments pour animaux de compagnie" }
+  ],
+  "11.01": [
+    { "value": "11.01Z", "label": "11.01Z - Production de boissons alcooliques distillées" }
+  ],
+  "11.02": [
+    { "value": "11.02A", "label": "11.02A - Fabrication de vins effervescents" },
+    { "value": "11.02B", "label": "11.02B - Vinification" }
+  ],
+  "11.03": [
+    { "value": "11.03Z", "label": "11.03Z - Fabrication de cidre et de vins de fruits" }
+  ],
+  "11.04": [
+    { "value": "11.04Z", "label": "11.04Z - Production d'autres boissons fermentées non distillées" }
+  ],
+  "11.05": [
+    { "value": "11.05Z", "label": "11.05Z - Fabrication de bière" }
+  ],
+  "11.06": [
+    { "value": "11.06Z", "label": "11.06Z - Fabrication de malt" }
+  ],
+  "11.07": [
+    { "value": "11.07Z", "label": "11.07Z - Industrie des eaux de table" }
+  ],
+  "12.00": [
+    { "value": "12.00Z", "label": "12.00Z - Fabrication de produits à base de tabac" }
+  ],
+  "13.10": [
+    { "value": "13.10Z", "label": "13.10Z - Préparation de fibres textiles" }
+  ],
+  "13.20": [
+    { "value": "13.20Z", "label": "13.20Z - Tissage" }
+  ],
+  "13.30": [
+    { "value": "13.30Z", "label": "13.30Z - Ennoblissement textile" }
+  ],
+  "13.91": [
+    { "value": "13.91Z", "label": "13.91Z - Fabrication d'articles à mailles" }
+  ],
+  "13.92": [
+    { "value": "13.92Z", "label": "13.92Z - Fabrication de textiles techniques et industriels" }
+  ],
+  "13.93": [
+    { "value": "13.93Z", "label": "13.93Z - Fabrication de tapis et de moquettes" }
+  ],
+  "13.94": [
+    { "value": "13.94Z", "label": "13.94Z - Fabrication de ficelles, cordes et filets" }
+  ],
+  "13.95": [
+    { "value": "13.95Z", "label": "13.95Z - Fabrication de non-tissés, sauf habillement" }
+  ],
+  "13.96": [
+    { "value": "13.96Z", "label": "13.96Z - Fabrication d'autres textiles techniques et industriels" }
+  ],
+  "13.99": [
+    { "value": "13.99Z", "label": "13.99Z - Fabrication d'autres textiles n.c.a." }
+  ],
+  "14.11": [
+    { "value": "14.11Z", "label": "14.11Z - Fabrication de vêtements en cuir" }
+  ],
+  "14.12": [
+    { "value": "14.12Z", "label": "14.12Z - Fabrication de vêtements de travail" }
+  ],
+  "14.13": [
+    { "value": "14.13Z", "label": "14.13Z - Fabrication de vêtements de dessus" }
+  ],
+  "14.14": [
+    { "value": "14.14Z", "label": "14.14Z - Fabrication de vêtements de dessous" }
+  ],
+  "14.19": [
+    { "value": "14.19Z", "label": "14.19Z - Fabrication d'autres vêtements et accessoires" }
+  ],
+  "14.20": [
+    { "value": "14.20Z", "label": "14.20Z - Fabrication d'articles en fourrure" }
+  ],
+  "14.31": [
+    { "value": "14.31Z", "label": "14.31Z - Fabrication d'articles chaussants à mailles" }
+  ],
+  "14.39": [
+    { "value": "14.39Z", "label": "14.39Z - Fabrication d'autres articles à mailles" }
+  ],
+  "15.11": [
+    { "value": "15.11Z", "label": "15.11Z - Apprêt et tannage des cuirs ; préparation et teinture des fourrures" }
+  ],
+  "15.12": [
+    { "value": "15.12Z", "label": "15.12Z - Fabrication d'articles de voyage, de maroquinerie et de sellerie" }
+  ],
+  "15.20": [
+    { "value": "15.20Z", "label": "15.20Z - Fabrication de chaussures" }
+  ],
+  "16.10": [
+    { "value": "16.10A", "label": "16.10A - Sciage et rabotage du bois, hors imprégnation" },
+    { "value": "16.10B", "label": "16.10B - Imprégnation du bois" }
+  ],
+  "16.21": [
+    { "value": "16.21Z", "label": "16.21Z - Fabrication de placage et de panneaux de bois" }
+  ],
+  "16.22": [
+    { "value": "16.22Z", "label": "16.22Z - Fabrication de parquets assemblés" }
+  ],
+  "16.23": [
+    { "value": "16.23Z", "label": "16.23Z - Fabrication de charpentes et d'autres menuiseries" }
+  ],
+  "16.24": [
+    { "value": "16.24Z", "label": "16.24Z - Fabrication d'emballages en bois" }
+  ],
+  "16.29": [
+    { "value": "16.29Z", "label": "16.29Z - Fabrication d'objets divers en bois, fabrication d'objets en liège, vannerie et sparterie" }
+  ],
+  "17.11": [
+    { "value": "17.11Z", "label": "17.11Z - Fabrication de pâte à papier" }
+  ],
+  "17.12": [
+    { "value": "17.12Z", "label": "17.12Z - Fabrication de papier et de carton" }
+  ],
+  "17.21": [
+    { "value": "17.21A", "label": "17.21A - Fabrication de cartonnages" },
+    { "value": "17.21B", "label": "17.21B - Fabrication de plaques, feuilles, tubes et profilés en matières plastiques" }
+  ],
+  "17.22": [
+    { "value": "17.22Z", "label": "17.22Z - Fabrication de produits en papier à usage sanitaire ou domestique" }
+  ],
+  "17.23": [
+    { "value": "17.23Z", "label": "17.23Z - Fabrication d'articles en papier ou en carton" }
+  ],
+  "17.24": [
+    { "value": "17.24Z", "label": "17.24Z - Fabrication de papiers peints" }
+  ],
+  "17.29": [
+    { "value": "17.29Z", "label": "17.29Z - Fabrication d'autres articles en papier ou en carton" }
+  ],
+  "18.11": [
+    { "value": "18.11Z", "label": "18.11Z - Imprimerie de journaux" }
+  ],
+  "18.12": [
+    { "value": "18.12Z", "label": "18.12Z - Autre imprimerie (labeur)" }
+  ],
+  "18.13": [
+    { "value": "18.13Z", "label": "18.13Z - Activités de pré-presse" }
+  ],
+  "18.14": [
+    { "value": "18.14Z", "label": "18.14Z - Reliure et activités connexes" }
+  ],
+  "18.20": [
+    { "value": "18.20Z", "label": "18.20Z - Reproduction d'enregistrements" }
+  ],
+  "19.10": [
+    { "value": "19.10Z", "label": "19.10Z - Cokéfaction" }
+  ],
+  "19.20": [
+    { "value": "19.20Z", "label": "19.20Z - Raffinage du pétrole" }
+  ],
+  "20.11": [
+    { "value": "20.11Z", "label": "20.11Z - Fabrication de gaz industriels" }
+  ],
+  "20.12": [
+    { "value": "20.12Z", "label": "20.12Z - Fabrication de colorants et de pigments" }
+  ],
+  "20.13": [
+    { "value": "20.13A", "label": "20.13A - Enrichissement et retraitement de matières nucléaires" },
+    { "value": "20.13B", "label": "20.13B - Fabrication d'éléments en béton pour la construction" }
+  ],
+  "20.14": [
+    { "value": "20.14Z", "label": "20.14Z - Fabrication d'autres produits chimiques organiques de base" }
+  ],
+  "20.15": [
+    { "value": "20.15Z", "label": "20.15Z - Fabrication de produits chimiques azotés et d'engrais" }
+  ],
+  "20.16": [
+    { "value": "20.16Z", "label": "20.16Z - Fabrication de matières plastiques de base" }
+  ],
+  "20.17": [
+    { "value": "20.17Z", "label": "20.17Z - Fabrication de caoutchouc synthétique" }
+  ],
+  "20.20": [
+    { "value": "20.20Z", "label": "20.20Z - Fabrication de pesticides et d'autres produits agrochimiques" }
+  ],
+  "20.30": [
+    { "value": "20.30Z", "label": "20.30Z - Fabrication de peintures, vernis, encres et mastics" }
+  ],
+  "20.41": [
+    { "value": "20.41Z", "label": "20.41Z - Fabrication de savons, détergents et produits d'entretien" }
+  ],
+  "20.42": [
+    { "value": "20.42Z", "label": "20.42Z - Fabrication de parfums et de produits pour la toilette" }
+  ],
+  "20.51": [
+    { "value": "20.51Z", "label": "20.51Z - Fabrication de produits explosifs" }
+  ],
+  "20.52": [
+    { "value": "20.52Z", "label": "20.52Z - Fabrication de colles" }
+  ],
+  "20.53": [
+    { "value": "20.53Z", "label": "20.53Z - Fabrication d'huiles essentielles" }
+  ],
+  "20.59": [
+    { "value": "20.59Z", "label": "20.59Z - Fabrication d'autres produits chimiques n.c.a." }
+  ],
+  "20.60": [
+    { "value": "20.60Z", "label": "20.60Z - Fabrication de fibres artificielles ou synthétiques" }
+  ],
+  "21.10": [
+    { "value": "21.10Z", "label": "21.10Z - Fabrication de produits pharmaceutiques de base" }
+  ],
+  "21.20": [
+    { "value": "21.20Z", "label": "21.20Z - Fabrication de préparations pharmaceutiques" }
+  ],
+  "22.11": [
+    { "value": "22.11Z", "label": "22.11Z - Fabrication et rechapage de pneumatiques" }
+  ],
+  "22.19": [
+    { "value": "22.19Z", "label": "22.19Z - Fabrication d'autres articles en caoutchouc" }
+  ],
+  "22.21": [
+    { "value": "22.21Z", "label": "22.21Z - Fabrication de plaques, feuilles, tubes et profilés en matières plastiques" }
+  ],
+  "22.22": [
+    { "value": "22.22Z", "label": "22.22Z - Fabrication d'emballages en matières plastiques" }
+  ],
+  "22.23": [
+    { "value": "22.23Z", "label": "22.23Z - Fabrication d'éléments en matières plastiques pour la construction" }
+  ],
+  "22.29": [
+    { "value": "22.29A", "label": "22.29A - Fabrication de produits de consommation courante en matières plastiques" },
+    { "value": "22.29B", "label": "22.29B - Fabrication de produits de consommation courante en matières plastiques" }
+  ],
+  "23.11": [
+    { "value": "23.11Z", "label": "23.11Z - Fabrication de verre plat" }
+  ],
+  "23.12": [
+    { "value": "23.12Z", "label": "23.12Z - Façonnage et transformation du verre plat" }
+  ],
+  "23.13": [
+    { "value": "23.13Z", "label": "23.13Z - Fabrication de verre creux" }
+  ],
+  "23.14": [
+    { "value": "23.14Z", "label": "23.14Z - Fabrication de fibres de verre" }
+  ],
+  "23.19": [
+    { "value": "23.19Z", "label": "23.19Z - Fabrication et façonnage d'autres articles en verre, y compris verre technique" }
+  ],
+  "23.20": [
+    { "value": "23.20Z", "label": "23.20Z - Fabrication de produits réfractaires" }
+  ],
+  "23.31": [
+    { "value": "23.31Z", "label": "23.31Z - Fabrication de carreaux en céramique" }
+  ],
+  "23.32": [
+    { "value": "23.32Z", "label": "23.32Z - Fabrication de briques, tuiles et produits de construction en terre cuite" }
+  ],
+  "23.41": [
+    { "value": "23.41Z", "label": "23.41Z - Fabrication d'articles céramiques à usage domestique ou ornemental" }
+  ],
+  "23.42": [
+    { "value": "23.42Z", "label": "23.42Z - Fabrication d'appareils sanitaires en céramique" }
+  ],
+  "23.43": [
+    { "value": "23.43Z", "label": "23.43Z - Fabrication d'isolateurs et pièces isolantes en céramique" }
+  ],
+  "23.44": [
+    { "value": "23.44Z", "label": "23.44Z - Fabrication d'autres produits céramiques à usage technique" }
+  ],
+  "23.49": [
+    { "value": "23.49Z", "label": "23.49Z - Fabrication d'autres produits céramiques" }
+  ],
+  "23.51": [
+    { "value": "23.51Z", "label": "23.51Z - Production de ciment" }
+  ],
+  "23.52": [
+    { "value": "23.52Z", "label": "23.52Z - Fabrication de chaux et plâtre" }
+  ],
+  "23.61": [
+    { "value": "23.61Z", "label": "23.61Z - Fabrication d'éléments en béton pour la construction" }
+  ],
+  "23.62": [
+    { "value": "23.62Z", "label": "23.62Z - Fabrication d'éléments en plâtre pour la construction" }
+  ],
+  "23.63": [
+    { "value": "23.63Z", "label": "23.63Z - Fabrication de béton prêt à l'emploi" }
+  ],
+  "23.64": [
+    { "value": "23.64Z", "label": "23.64Z - Fabrication de mortiers et bétons secs" }
+  ],
+  "23.65": [
+    { "value": "23.65Z", "label": "23.65Z - Fabrication de fibre-ciment" }
+  ],
+  "23.69": [
+    { "value": "23.69Z", "label": "23.69Z - Fabrication d'autres ouvrages en béton, en ciment ou en plâtre" }
+  ],
+  "23.70": [
+    { "value": "23.70Z", "label": "23.70Z - Taille, façonnage et finissage de pierres" }
+  ],
+  "23.91": [
+    { "value": "23.91Z", "label": "23.91Z - Fabrication de produits abrasifs" }
+  ],
+  "23.99": [
+    { "value": "23.99Z", "label": "23.99Z - Fabrication d'autres produits minéraux non métalliques n.c.a." }
+  ],
+  "24.10": [
+    { "value": "24.10Z", "label": "24.10Z - Sidérurgie" }
+  ],
+  "24.20": [
+    { "value": "24.20Z", "label": "24.20Z - Fabrication de tubes, tuyaux, profilés creux et accessoires correspondants en acier" }
+  ],
+  "24.31": [
+    { "value": "24.31Z", "label": "24.31Z - Étirage à froid de barres" }
+  ],
+  "24.32": [
+    { "value": "24.32Z", "label": "24.32Z - Laminage à froid de feuillards" }
+  ],
+  "24.33": [
+    { "value": "24.33Z", "label": "24.33Z - Profilage à froid par formage ou pliage" }
+  ],
+  "24.34": [
+    { "value": "24.34Z", "label": "24.34Z - Tréfilage à froid" }
+  ],
+  "24.41": [
+    { "value": "24.41Z", "label": "24.41Z - Production de métaux précieux" }
+  ],
+  "24.42": [
+    { "value": "24.42Z", "label": "24.42Z - Métallurgie de l'aluminium" }
+  ],
+  "24.43": [
+    { "value": "24.43Z", "label": "24.43Z - Métallurgie du plomb, du zinc ou de l'étain" }
+  ],
+  "24.44": [
+    { "value": "24.44Z", "label": "24.44Z - Métallurgie du cuivre" }
+  ],
+  "24.45": [
+    { "value": "24.45Z", "label": "24.45Z - Métallurgie des autres métaux non ferreux" }
+  ],
+  "24.46": [
+    { "value": "24.46Z", "label": "24.46Z - Élaboration et transformation de matières nucléaires" }
+  ],
+  "24.51": [
+    { "value": "24.51Z", "label": "24.51Z - Fonderie de fonte" }
+  ],
+  "24.52": [
+    { "value": "24.52Z", "label": "24.52Z - Fonderie d'acier" }
+  ],
+  "24.53": [
+    { "value": "24.53Z", "label": "24.53Z - Fonderie de métaux légers" }
+  ],
+  "24.54": [
+    { "value": "24.54Z", "label": "24.54Z - Fonderie d'autres métaux non ferreux" }
+  ],
+  "25.11": [
+    { "value": "25.11Z", "label": "25.11Z - Fabrication de structures métalliques et de parties de structures" }
+  ],
+  "25.12": [
+    { "value": "25.12Z", "label": "25.12Z - Fabrication de portes et fenêtres en métal" }
+  ],
+  "25.21": [
+    { "value": "25.21Z", "label": "25.21Z - Fabrication de radiateurs et de chaudières pour le chauffage central" }
+  ],
+  "25.29": [
+    { "value": "25.29Z", "label": "25.29Z - Fabrication d'autres réservoirs, citernes et conteneurs métalliques" }
+  ],
+  "25.30": [
+    { "value": "25.30Z", "label": "25.30Z - Fabrication de générateurs de vapeur, à l'exception des chaudières pour le chauffage central" }
+  ],
+  "25.40": [
+    { "value": "25.40Z", "label": "25.40Z - Fabrication d'armes et de munitions" }
+  ],
+  "25.50": [
+    { "value": "25.50Z", "label": "25.50Z - Forge, emboutissage, estampage ; métallurgie des poudres" }
+  ],
+  "25.61": [
+    { "value": "25.61Z", "label": "25.61Z - Traitement et revêtement des métaux" }
+  ],
+  "25.62": [
+    { "value": "25.62A", "label": "25.62A - Décolletage" },
+    { "value": "25.62B", "label": "25.62B - Mécanique industrielle" }
+  ],
+  "25.71": [
+    { "value": "25.71Z", "label": "25.71Z - Fabrication de coutellerie" }
+  ],
+  "25.72": [
+    { "value": "25.72Z", "label": "25.72Z - Fabrication de serrures et de ferrures" }
+  ],
+  "25.73": [
+    { "value": "25.73A", "label": "25.73A - Fabrication de moules et modèles" },
+    { "value": "25.73B", "label": "25.73B - Fabrication d'autres outillages" }
+  ],
+  "25.91": [
+    { "value": "25.91Z", "label": "25.91Z - Fabrication de fûts et emballages métalliques similaires" }
+  ],
+  "25.92": [
+    { "value": "25.92Z", "label": "25.92Z - Fabrication d'emballages métalliques légers" }
+  ],
+  "25.93": [
+    { "value": "25.93Z", "label": "25.93Z - Fabrication d'articles en fils métalliques, de chaînes et de ressorts" }
+  ],
+  "25.94": [
+    { "value": "25.94Z", "label": "25.94Z - Fabrication de vis et de boulons" }
+  ],
+  "25.99": [
+    { "value": "25.99A", "label": "25.99A - Fabrication d'articles métalliques ménagers" },
+    { "value": "25.99B", "label": "25.99B - Fabrication d'autres articles métalliques" }
+  ],
+  "26.11": [
+    { "value": "26.11Z", "label": "26.11Z - Fabrication de composants électroniques" }
+  ],
+  "26.12": [
+    { "value": "26.12Z", "label": "26.12Z - Fabrication de cartes électroniques assemblées" }
+  ],
+  "26.20": [
+    { "value": "26.20Z", "label": "26.20Z - Fabrication d'ordinateurs et d'équipements périphériques" }
+  ],
+  "26.30": [
+    { "value": "26.30Z", "label": "26.30Z - Fabrication d'équipements de communication" }
+  ],
+  "26.40": [
+    { "value": "26.40Z", "label": "26.40Z - Fabrication de produits électroniques grand public" }
+  ],
+  "26.51": [
+    { "value": "26.51A", "label": "26.51A - Fabrication d'instruments et d'appareils de mesure, d'essai et de navigation" },
+    { "value": "26.51B", "label": "26.51B - Fabrication d'équipements de contrôle des processus industriels" }
+  ],
+  "26.60": [
+    { "value": "26.60Z", "label": "26.60Z - Fabrication d'équipements d'irradiation médicale, de matériel électromédical et électrothérapeutique" }
+  ],
+  "26.70": [
+    { "value": "26.70Z", "label": "26.70Z - Fabrication de matériel optique et photographique" }
+  ],
+  "26.80": [
+    { "value": "26.80Z", "label": "26.80Z - Fabrication de supports magnétiques et optiques" }
+  ],
+  "27.11": [
+    { "value": "27.11Z", "label": "27.11Z - Fabrication de moteurs, génératrices et transformateurs électriques" }
+  ],
+  "27.12": [
+    { "value": "27.12Z", "label": "27.12Z - Fabrication de matériel de distribution et de commande électrique" }
+  ],
+  "27.20": [
+    { "value": "27.20Z", "label": "27.20Z - Fabrication de piles et d'accumulateurs électriques" }
+  ],
+  "27.31": [
+    { "value": "27.31Z", "label": "27.31Z - Fabrication de câbles de fibres optiques" }
+  ],
+  "27.32": [
+    { "value": "27.32Z", "label": "27.32Z - Fabrication d'autres fils et câbles électroniques ou électriques" }
+  ],
+  "27.33": [
+    { "value": "27.33Z", "label": "27.33Z - Fabrication de matériel d'installation électrique" }
+  ],
+  "27.40": [
+    { "value": "27.40Z", "label": "27.40Z - Fabrication d'appareils d'éclairage électrique" }
+  ],
+  "27.51": [
+    { "value": "27.51Z", "label": "27.51Z - Fabrication d'appareils électroménagers" }
+  ],
+  "27.90": [
+    { "value": "27.90Z", "label": "27.90Z - Fabrication d'autres matériels électriques" }
+  ],
+  "28.11": [
+    { "value": "28.11Z", "label": "28.11Z - Fabrication de moteurs et turbines, à l'exception des moteurs d'avions et de véhicules" }
+  ],
+  "28.12": [
+    { "value": "28.12Z", "label": "28.12Z - Fabrication d'équipements hydrauliques et pneumatiques" }
+  ],
+  "28.13": [
+    { "value": "28.13Z", "label": "28.13Z - Fabrication d'autres pompes et compresseurs" }
+  ],
+  "28.14": [
+    { "value": "28.14Z", "label": "28.14Z - Fabrication d'autres articles de robinetterie" }
+  ],
+  "28.15": [
+    { "value": "28.15Z", "label": "28.15Z - Fabrication d'engrenages et d'organes mécaniques de transmission" }
+  ],
+  "28.21": [
+    { "value": "28.21Z", "label": "28.21Z - Fabrication de fours et brûleurs" }
+  ],
+  "28.22": [
+    { "value": "28.22Z", "label": "28.22Z - Fabrication de matériel de levage et de manutention" }
+  ],
+  "28.23": [
+    { "value": "28.23Z", "label": "28.23Z - Fabrication de machines et d'équipements de bureau (à l'exception des ordinateurs et équipements périphériques)" }
+  ],
+  "28.24": [
+    { "value": "28.24Z", "label": "28.24Z - Fabrication d'outillage portatif à moteur incorporé" }
+  ],
+  "28.25": [
+    { "value": "28.25Z", "label": "28.25Z - Fabrication d'équipements aérauliques et frigorifiques industriels" }
+  ],
+  "28.29": [
+    { "value": "28.29A", "label": "28.29A - Fabrication de matériel d'embouteillage, de conditionnement et de pesage" },
+    { "value": "28.29B", "label": "28.29B - Fabrication d'autres machines d'usage général" }
+  ],
+  "28.30": [
+    { "value": "28.30Z", "label": "28.30Z - Fabrication de machines agricoles et forestières" }
+  ],
+  "28.41": [
+    { "value": "28.41Z", "label": "28.41Z - Fabrication de machines-outils pour le travail des métaux" }
+  ],
+  "28.49": [
+    { "value": "28.49Z", "label": "28.49Z - Fabrication d'autres machines-outils" }
+  ],
+  "28.91": [
+    { "value": "28.91Z", "label": "28.91Z - Fabrication de machines pour la métallurgie" }
+  ],
+  "28.92": [
+    { "value": "28.92Z", "label": "28.92Z - Fabrication de machines pour l'extraction ou la construction" }
+  ],
+  "28.93": [
+    { "value": "28.93Z", "label": "28.93Z - Fabrication de machines pour l'industrie agro-alimentaire" }
+  ],
+  "28.94": [
+    { "value": "28.94Z", "label": "28.94Z - Fabrication de machines pour les industries textiles" }
+  ],
+  "28.95": [
+    { "value": "28.95Z", "label": "28.95Z - Fabrication de machines pour les industries du papier et du carton" }
+  ],
+  "28.96": [
+    { "value": "28.96Z", "label": "28.96Z - Fabrication de machines pour le travail du caoutchouc ou des plastiques" }
+  ],
+  "28.99": [
+    { "value": "28.99A", "label": "28.99A - Fabrication de machines pour l'industrie du cuir" },
+    { "value": "28.99B", "label": "28.99B - Fabrication d'autres machines spécialisées" }
+  ],
+  "29.10": [
+    { "value": "29.10Z", "label": "29.10Z - Construction de véhicules automobiles" }
+  ],
+  "29.20": [
+    { "value": "29.20Z", "label": "29.20Z - Fabrication de carrosseries et remorques" }
+  ],
+  "29.31": [
+    { "value": "29.31Z", "label": "29.31Z - Fabrication d'équipements électriques et électroniques automobiles" }
+  ],
+  "29.32": [
+    { "value": "29.32Z", "label": "29.32Z - Fabrication d'autres équipements automobiles" }
+  ],
+  "30.11": [
+    { "value": "30.11Z", "label": "30.11Z - Construction de navires et de structures flottantes" }
+  ],
+  "30.12": [
+    { "value": "30.12Z", "label": "30.12Z - Construction de bateaux de plaisance" }
+  ],
+  "30.20": [
+    { "value": "30.20Z", "label": "30.20Z - Construction de locomotives et d'autre matériel ferroviaire roulant" }
+  ],
+  "30.30": [
+    { "value": "30.30Z", "label": "30.30Z - Construction aéronautique et spatiale" }
+  ],
+  "30.40": [
+    { "value": "30.40Z", "label": "30.40Z - Construction de véhicules militaires de combat" }
+  ],
+  "30.91": [
+    { "value": "30.91Z", "label": "30.91Z - Fabrication de motocycles" }
+  ],
+  "30.92": [
+    { "value": "30.92Z", "label": "30.92Z - Fabrication de bicyclettes et de véhicules pour invalides" }
+  ],
+  "30.99": [
+    { "value": "30.99Z", "label": "30.99Z - Fabrication d'autres équipements de transport n.c.a." }
+  ],
+  "31.01": [
+    { "value": "31.01Z", "label": "31.01Z - Fabrication de meubles de bureau et de magasin" }
+  ],
+  "31.02": [
+    { "value": "31.02Z", "label": "31.02Z - Fabrication de meubles de cuisine" }
+  ],
+  "31.03": [
+    { "value": "31.03Z", "label": "31.03Z - Fabrication de matelas" }
+  ],
+  "31.09": [
+    { "value": "31.09A", "label": "31.09A - Fabrication de sièges d'ameublement d'intérieur" },
+    { "value": "31.09B", "label": "31.09B - Fabrication d'autres meubles et industries connexes de l'ameublement" }
+  ],
+  "32.11": [
+    { "value": "32.11Z", "label": "32.11Z - Frappe de monnaie" }
+  ],
+  "32.12": [
+    { "value": "32.12Z", "label": "32.12Z - Fabrication d'articles de joaillerie et bijouterie" }
+  ],
+  "32.13": [
+    { "value": "32.13Z", "label": "32.13Z - Fabrication d'articles de bijouterie fantaisie et articles similaires" }
+  ],
+  "32.20": [
+    { "value": "32.20Z", "label": "32.20Z - Fabrication d'instruments de musique" }
+  ],
+  "32.30": [
+    { "value": "32.30Z", "label": "32.30Z - Fabrication d'articles de sport" }
+  ],
+  "32.40": [
+    { "value": "32.40Z", "label": "32.40Z - Fabrication de jeux et jouets" }
+  ],
+  "32.50": [
+    { "value": "32.50Z", "label": "32.50Z - Fabrication de matériel médico-chirurgical et dentaire" }
+  ],
+  "32.91": [
+    { "value": "32.91Z", "label": "32.91Z - Fabrication de balais et brosses" }
+  ],
+  "32.99": [
+    { "value": "32.99Z", "label": "32.99Z - Autres activités manufacturières n.c.a." }
+  ],
+  "33.11": [
+    { "value": "33.11Z", "label": "33.11Z - Réparation d'ouvrages en métaux" }
+  ],
+  "33.12": [
+    { "value": "33.12Z", "label": "33.12Z - Réparation de machines et équipements mécaniques" }
+  ],
+  "33.13": [
+    { "value": "33.13Z", "label": "33.13Z - Réparation de matériels électroniques et optiques" }
+  ],
+  "33.14": [
+    { "value": "33.14Z", "label": "33.14Z - Réparation d'équipements électriques" }
+  ],
+  "33.15": [
+    { "value": "33.15Z", "label": "33.15Z - Réparation et maintenance navale" }
+  ],
+  "33.16": [
+    { "value": "33.16Z", "label": "33.16Z - Réparation et maintenance d'aéronefs et d'engins spatiaux" }
+  ],
+  "33.17": [
+    { "value": "33.17Z", "label": "33.17Z - Réparation et maintenance d'autres équipements de transport" }
+  ],
+  "33.19": [
+    { "value": "33.19Z", "label": "33.19Z - Réparation d'autres équipements" }
+  ],
+  "33.20": [
+    { "value": "33.20A", "label": "33.20A - Installation de structures métalliques, chaudronnées et de tuyauterie" },
+    { "value": "33.20B", "label": "33.20B - Installation de machines et équipements mécaniques" }
+  ],
+  "35.11": [
+    { "value": "35.11Z", "label": "35.11Z - Production d'électricité" }
+  ],
+  "35.12": [
+    { "value": "35.12Z", "label": "35.12Z - Transport d'électricité" }
+  ],
+  "35.13": [
+    { "value": "35.13Z", "label": "35.13Z - Distribution d'électricité" }
+  ],
+  "35.14": [
+    { "value": "35.14Z", "label": "35.14Z - Commerce d'électricité" }
+  ],
+  "35.21": [
+    { "value": "35.21Z", "label": "35.21Z - Production de combustibles gazeux" }
+  ],
+  "35.22": [
+    { "value": "35.22Z", "label": "35.22Z - Distribution de combustibles gazeux par conduites" }
+  ],
+  "35.23": [
+    { "value": "35.23Z", "label": "35.23Z - Commerce de combustibles gazeux par conduites" }
+  ],
+  "35.30": [
+    { "value": "35.30Z", "label": "35.30Z - Production et distribution de vapeur et d'air conditionné" }
+  ],
+  "36.00": [
+    { "value": "36.00Z", "label": "36.00Z - Captage, traitement et distribution d'eau" }
+  ],
+  "37.00": [
+    { "value": "37.00Z", "label": "37.00Z - Collecte et traitement des eaux usées" }
+  ],
+  "38.11": [
+    { "value": "38.11Z", "label": "38.11Z - Collecte des déchets non dangereux" }
+  ],
+  "38.12": [
+    { "value": "38.12Z", "label": "38.12Z - Collecte des déchets dangereux" }
+  ],
+  "38.21": [
+    { "value": "38.21Z", "label": "38.21Z - Traitement et élimination des déchets non dangereux" }
+  ],
+  "38.22": [
+    { "value": "38.22Z", "label": "38.22Z - Traitement et élimination des déchets dangereux" }
+  ],
+  "38.31": [
+    { "value": "38.31Z", "label": "38.31Z - Démantèlement d'épaves" }
+  ],
+  "38.32": [
+    { "value": "38.32Z", "label": "38.32Z - Récupération de déchets triés" }
+  ],
+  "39.00": [
+    { "value": "39.00Z", "label": "39.00Z - Dépollution et autres services de gestion des déchets" }
+  ],
+  "41.10": [
+    { "value": "41.10A", "label": "41.10A - Promotion immobilière de logements" },
+    { "value": "41.10B", "label": "41.10B - Promotion immobilière de bureaux" }
+  ],
+  "41.20": [
+    { "value": "41.20A", "label": "41.20A - Construction de maisons individuelles" },
+    { "value": "41.20B", "label": "41.20B - Construction d'autres bâtiments" }
+  ],
+  "42.11": [
+    { "value": "42.11Z", "label": "42.11Z - Construction de routes et autoroutes" }
+  ],
+  "42.12": [
+    { "value": "42.12Z", "label": "42.12Z - Construction de voies ferrées de surface et souterraines" }
+  ],
+  "42.13": [
+    { "value": "42.13A", "label": "42.13A - Construction d'ouvrages d'art" },
+    { "value": "42.13B", "label": "42.13B - Construction et entretien de tunnels" }
+  ],
+  "42.21": [
+    { "value": "42.21Z", "label": "42.21Z - Construction de réseaux pour fluides" }
+  ],
+  "42.22": [
+    { "value": "42.22Z", "label": "42.22Z - Construction de réseaux électriques et de télécommunications" }
+  ],
+  "42.91": [
+    { "value": "42.91Z", "label": "42.91Z - Construction d'ouvrages maritimes et fluviaux" }
+  ],
+  "42.99": [
+    { "value": "42.99Z", "label": "42.99Z - Construction d'autres ouvrages de génie civil n.c.a." }
+  ],
+  "43.11": [
+    { "value": "43.11Z", "label": "43.11Z - Travaux de démolition" }
+  ],
+  "43.12": [
+    { "value": "43.12A", "label": "43.12A - Travaux de préparation des sites" },
+    { "value": "43.12B", "label": "43.12B - Travaux de terrassement spécialisés ou de grande masse" }
+  ],
+  "43.13": [
+    { "value": "43.13Z", "label": "43.13Z - Forages et sondages" }
+  ],
+  "43.21": [
+    { "value": "43.21A", "label": "43.21A - Travaux d'installation électrique dans tous locaux" },
+    { "value": "43.21B", "label": "43.21B - Travaux d'installation électrique sur la voie publique" }
+  ],
+  "43.22": [
+    { "value": "43.22A", "label": "43.22A - Travaux d'installation d'eau et de gaz en tous locaux" },
+    { "value": "43.22B", "label": "43.22B - Travaux d'installation d'équipements thermiques et de climatisation" }
+  ],
+  "43.29": [
+    { "value": "43.29A", "label": "43.29A - Travaux d'isolation" },
+    { "value": "43.29B", "label": "43.29B - Autres travaux d'installation n.c.a." }
+  ],
+  "43.31": [
+    { "value": "43.31Z", "label": "43.31Z - Travaux de plâtrerie" }
+  ],
+  "43.32": [
+    { "value": "43.32A", "label": "43.32A - Travaux de menuiserie bois et pvc" },
+    { "value": "43.32B", "label": "43.32B - Travaux de menuiserie métallique et serrurerie" }
+  ],
+  "43.33": [
+    { "value": "43.33Z", "label": "43.33Z - Travaux de revêtement des sols et des murs" }
+  ],
+  "43.34": [
+    { "value": "43.34Z", "label": "43.34Z - Travaux de peinture et vitrerie" }
+  ],
+  "43.39": [
+    { "value": "43.39Z", "label": "43.39Z - Autres travaux de finition" }
+  ],
+  "43.91": [
+    { "value": "43.91A", "label": "43.91A - Travaux de charpente" },
+    { "value": "43.91B", "label": "43.91B - Travaux de couverture par éléments" }
+  ],
+  "43.99": [
+    { "value": "43.99A", "label": "43.99A - Travaux d'étanchéification" },
+    { "value": "43.99B", "label": "43.99B - Travaux de montage de structures métalliques" },
+    { "value": "43.99C", "label": "43.99C - Travaux de maçonnerie générale et gros œuvre de bâtiment" },
+    { "value": "43.99D", "label": "43.99D - Autres travaux spécialisés de construction" }
+  ],
+  "45.11": [
+    { "value": "45.11Z", "label": "45.11Z - Commerce de voitures et de véhicules automobiles légers" }
+  ],
+  "45.19": [
+    { "value": "45.19Z", "label": "45.19Z - Commerce d'autres véhicules automobiles" }
+  ],
+  "45.20": [
+    { "value": "45.20A", "label": "45.20A - Entretien et réparation de véhicules automobiles légers" },
+    { "value": "45.20B", "label": "45.20B - Entretien et réparation d'autres véhicules automobiles" }
+  ],
+  "45.31": [
+    { "value": "45.31Z", "label": "45.31Z - Commerce de gros d'équipements automobiles" }
+  ],
+  "45.32": [
+    { "value": "45.32Z", "label": "45.32Z - Commerce de détail d'équipements automobiles" }
+  ],
+  "45.40": [
+    { "value": "45.40Z", "label": "45.40Z - Commerce et réparation de motocycles" }
+  ],
+  "46.11": [
+    { "value": "46.11Z", "label": "46.11Z - Intermédiaires du commerce en matières premières agricoles, animaux vivants, matières premières textiles et produits semi-finis" }
+  ],
+  "46.12": [
+    { "value": "46.12A", "label": "46.12A - Centrales d'achat de carburant" },
+    { "value": "46.12B", "label": "46.12B - Autres intermédiaires du commerce en combustibles, métaux, minéraux et produits chimiques" }
+  ],
+  "46.13": [
+    { "value": "46.13Z", "label": "46.13Z - Intermédiaires du commerce en bois et matériaux de construction" }
+  ],
+  "46.14": [
+    { "value": "46.14Z", "label": "46.14Z - Intermédiaires du commerce en machines, équipements industriels, navires et avions" }
+  ],
+  "46.15": [
+    { "value": "46.15Z", "label": "46.15Z - Intermédiaires du commerce en meubles, articles de ménage et quincaillerie" }
+  ],
+  "46.16": [
+    { "value": "46.16Z", "label": "46.16Z - Intermédiaires du commerce en textiles, habillement, fourrures, chaussures et articles en cuir" }
+  ],
+  "46.17": [
+    { "value": "46.17Z", "label": "46.17Z - Intermédiaires du commerce en denrées, boissons et tabac" }
+  ],
+  "46.18": [
+    { "value": "46.18Z", "label": "46.18Z - Intermédiaires spécialisés dans le commerce d'autres produits spécifiques" }
+  ],
+  "46.19": [
+    { "value": "46.19A", "label": "46.19A - Centrales d'achat non alimentaires" },
+    { "value": "46.19B", "label": "46.19B - Autres intermédiaires du commerce en produits divers" }
+  ],
+  "46.21": [
+    { "value": "46.21Z", "label": "46.21Z - Commerce de gros de céréales, tabac non manufacturé, semences et aliments pour le bétail" }
+  ],
+  "46.22": [
+    { "value": "46.22Z", "label": "46.22Z - Commerce de gros de fleurs et plantes" }
+  ],
+  "46.23": [
+    { "value": "46.23Z", "label": "46.23Z - Commerce de gros d'animaux vivants" }
+  ],
+  "46.24": [
+    { "value": "46.24Z", "label": "46.24Z - Commerce de gros de cuirs et peaux" }
+  ],
+  "46.31": [
+    { "value": "46.31Z", "label": "46.31Z - Commerce de gros de fruits et légumes" }
+  ],
+  "46.32": [
+    { "value": "46.32A", "label": "46.32A - Commerce de gros de viandes de boucherie" },
+    { "value": "46.32B", "label": "46.32B - Commerce de gros de produits à base de viande" }
+  ],
+  "46.33": [
+    { "value": "46.33Z", "label": "46.33Z - Commerce de gros de produits laitiers, œufs, huiles et matières grasses comestibles" }
+  ],
+  "46.34": [
+    { "value": "46.34Z", "label": "46.34Z - Commerce de gros de boissons" }
+  ],
+  "46.35": [
+    { "value": "46.35Z", "label": "46.35Z - Commerce de gros de produits à base de tabac" }
+  ],
+  "46.36": [
+    { "value": "46.36Z", "label": "46.36Z - Commerce de gros de sucre, chocolat et confiserie" }
+  ],
+  "46.37": [
+    { "value": "46.37Z", "label": "46.37Z - Commerce de gros de café, thé, cacao et épices" }
+  ],
+  "46.38": [
+    { "value": "46.38A", "label": "46.38A - Commerce de gros de poissons, crustacés et mollusques" },
+    { "value": "46.38B", "label": "46.38B - Commerce de gros alimentaire spécialisé divers" }
+  ],
+  "46.39": [
+    { "value": "46.39A", "label": "46.39A - Commerce de gros de produits surgelés" },
+    { "value": "46.39B", "label": "46.39B - Autre commerce de gros alimentaire" }
+  ],
+  "46.41": [
+    { "value": "46.41Z", "label": "46.41Z - Commerce de gros de textiles" }
+  ],
+  "46.42": [
+    { "value": "46.42Z", "label": "46.42Z - Commerce de gros d'habillement et de chaussures" }
+  ],
+  "46.43": [
+    { "value": "46.43Z", "label": "46.43Z - Commerce de gros d'appareils électroménagers" }
+  ],
+  "46.44": [
+    { "value": "46.44Z", "label": "46.44Z - Commerce de gros de vaisselle, verrerie et produits d'entretien" }
+  ],
+  "46.45": [
+    { "value": "46.45Z", "label": "46.45Z - Commerce de gros de parfumerie et de produits de beauté" }
+  ],
+  "46.46": [
+    { "value": "46.46Z", "label": "46.46Z - Commerce de gros de produits pharmaceutiques" }
+  ],
+  "46.47": [
+    { "value": "46.47Z", "label": "46.47Z - Commerce de gros de meubles, de tapis et d'appareils d'éclairage" }
+  ],
+  "46.48": [
+    { "value": "46.48Z", "label": "46.48Z - Commerce de gros d'articles d'horlogerie et de bijouterie" }
+  ],
+  "46.49": [
+    { "value": "46.49Z", "label": "46.49Z - Commerce de gros d'autres biens domestiques" }
+  ],
+  "46.51": [
+    { "value": "46.51Z", "label": "46.51Z - Commerce de gros d'ordinateurs, d'équipements informatiques périphériques et de logiciels" }
+  ],
+  "46.52": [
+    { "value": "46.52Z", "label": "46.52Z - Commerce de gros de composants et d'équipements électroniques et de télécommunication" }
+  ],
+  "46.61": [
+    { "value": "46.61Z", "label": "46.61Z - Commerce de gros de matériel agricole" }
+  ],
+  "46.62": [
+    { "value": "46.62Z", "label": "46.62Z - Commerce de gros de machines-outils" }
+  ],
+  "46.63": [
+    { "value": "46.63Z", "label": "46.63Z - Commerce de gros de machines pour l'extraction, la construction et le génie civil" }
+  ],
+  "46.64": [
+    { "value": "46.64Z", "label": "46.64Z - Commerce de gros de machines pour l'industrie textile et l'habillement" }
+  ],
+  "46.65": [
+    { "value": "46.65Z", "label": "46.65Z - Commerce de gros de mobilier de bureau" }
+  ],
+  "46.66": [
+    { "value": "46.66Z", "label": "46.66Z - Commerce de gros d'autres machines et équipements de bureau" }
+  ],
+  "46.69": [
+    { "value": "46.69A", "label": "46.69A - Commerce de gros de matériel électrique" },
+    { "value": "46.69B", "label": "46.69B - Commerce de gros de fournitures et équipements industriels divers" }
+  ],
+  "46.71": [
+    { "value": "46.71Z", "label": "46.71Z - Commerce de gros de combustibles et de produits annexes" }
+  ],
+  "46.72": [
+    { "value": "46.72Z", "label": "46.72Z - Commerce de gros de minerais et métaux" }
+  ],
+  "46.73": [
+    { "value": "46.73A", "label": "46.73A - Commerce de gros de bois et de matériaux de construction" },
+    { "value": "46.73B", "label": "46.73B - Commerce de gros de quincaillerie" }
+  ],
+  "46.74": [
+    { "value": "46.74A", "label": "46.74A - Commerce de gros de produits chimiques" },
+    { "value": "46.74B", "label": "46.74B - Commerce de gros de fournitures pour la plomberie et le chauffage" }
+  ],
+  "46.75": [
+    { "value": "46.75Z", "label": "46.75Z - Commerce de gros de produits chimiques" }
+  ],
+  "46.76": [
+    { "value": "46.76Z", "label": "46.76Z - Commerce de gros d'autres produits intermédiaires" }
+  ],
+  "46.77": [
+    { "value": "46.77Z", "label": "46.77Z - Commerce de gros de déchets et débris" }
+  ],
+  "46.90": [
+    { "value": "46.90Z", "label": "46.90Z - Commerce de gros non spécialisé" }
+  ],
+  "47.11": [
+    { "value": "47.11A", "label": "47.11A - Commerce de détail de produits surgelés" },
+    { "value": "47.11B", "label": "47.11B - Commerce d'alimentation générale" },
+    { "value": "47.11C", "label": "47.11C - Supérettes" },
+    { "value": "47.11D", "label": "47.11D - Supermarchés" },
+    { "value": "47.11E", "label": "47.11E - Magasins multi-commerces" },
+    { "value": "47.11F", "label": "47.11F - Hypermarchés" }
+  ],
+  "47.19": [
+    { "value": "47.19A", "label": "47.19A - Grands magasins" },
+    { "value": "47.19B", "label": "47.19B - Autres commerces de détail en magasin non spécialisé" }
+  ],
+  "47.21": [
+    { "value": "47.21Z", "label": "47.21Z - Commerce de détail de fruits et légumes en magasin spécialisé" }
+  ],
+  "47.22": [
+    { "value": "47.22Z", "label": "47.22Z - Commerce de détail de viandes et de produits à base de viande en magasin spécialisé" }
+  ],
+  "47.23": [
+    { "value": "47.23Z", "label": "47.23Z - Commerce de détail de poissons, crustacés et mollusques en magasin spécialisé" }
+  ],
+  "47.24": [
+    { "value": "47.24Z", "label": "47.24Z - Commerce de détail de pain, pâtisserie et confiserie en magasin spécialisé" }
+  ],
+  "47.25": [
+    { "value": "47.25Z", "label": "47.25Z - Commerce de détail de boissons en magasin spécialisé" }
+  ],
+  "47.26": [
+    { "value": "47.26Z", "label": "47.26Z - Commerce de détail de produits à base de tabac en magasin spécialisé" }
+  ],
+  "47.29": [
+    { "value": "47.29Z", "label": "47.29Z - Commerce de détail de produits alimentaires n.c.a." }
+  ],
+  "47.30": [
+    { "value": "47.30Z", "label": "47.30Z - Commerce de détail de carburants en magasin spécialisé" }
+  ],
+  "47.41": [
+    { "value": "47.41Z", "label": "47.41Z - Commerce de détail d'ordinateurs, d'unités périphériques et de logiciels en magasin spécialisé" }
+  ],
+  "47.42": [
+    { "value": "47.42Z", "label": "47.42Z - Commerce de détail de matériels de télécommunication en magasin spécialisé" }
+  ],
+  "47.43": [
+    { "value": "47.43Z", "label": "47.43Z - Commerce de détail de matériels audio et vidéo en magasin spécialisé" }
+  ],
+  "47.51": [
+    { "value": "47.51Z", "label": "47.51Z - Commerce de détail de textiles en magasin spécialisé" }
+  ],
+  "47.52": [
+    { "value": "47.52A", "label": "47.52A - Commerce de détail de quincaillerie, peintures et verres en grandes surfaces (400 m² et plus)" },
+    { "value": "47.52B", "label": "47.52B - Commerce de détail de quincaillerie, peintures et verres en petites surfaces (moins de 400 m²)" }
+  ],
+  "47.53": [
+    { "value": "47.53Z", "label": "47.53Z - Commerce de détail de tapis, moquettes et revêtements de murs et de sols en magasin spécialisé" }
+  ],
+  "47.54": [
+    { "value": "47.54Z", "label": "47.54Z - Commerce de détail d'appareils électroménagers en magasin spécialisé" }
+  ],
+  "47.59": [
+    { "value": "47.59A", "label": "47.59A - Commerce de détail de meubles" },
+    { "value": "47.59B", "label": "47.59B - Commerce de détail d'autres articles électroménagers en magasin spécialisé" }
+  ],
+  "47.61": [
+    { "value": "47.61Z", "label": "47.61Z - Commerce de détail de livres en magasin spécialisé" }
+  ],
+  "47.62": [
+    { "value": "47.62Z", "label": "47.62Z - Commerce de détail de journaux et papeterie en magasin spécialisé" }
+  ],
+  "47.63": [
+    { "value": "47.63Z", "label": "47.63Z - Commerce de détail d'enregistrements musicaux et vidéo en magasin spécialisé" }
+  ],
+  "47.64": [
+    { "value": "47.64Z", "label": "47.64Z - Commerce de détail d'articles de sport en magasin spécialisé" }
+  ],
+  "47.65": [
+    { "value": "47.65Z", "label": "47.65Z - Commerce de détail de jeux et jouets en magasin spécialisé" }
+  ],
+  "47.71": [
+    { "value": "47.71Z", "label": "47.71Z - Commerce de détail d'habillement en magasin spécialisé" }
+  ],
+  "47.72": [
+    { "value": "47.72A", "label": "47.72A - Commerce de détail de la chaussure" },
+    { "value": "47.72B", "label": "47.72B - Commerce de détail de maroquinerie et d'articles de voyage" }
+  ],
+  "47.73": [
+    { "value": "47.73Z", "label": "47.73Z - Commerce de détail de produits pharmaceutiques en magasin spécialisé" }
+  ],
+  "47.74": [
+    { "value": "47.74Z", "label": "47.74Z - Commerce de détail d'articles médicaux et orthopédiques en magasin spécialisé" }
+  ],
+  "47.75": [
+    { "value": "47.75Z", "label": "47.75Z - Commerce de détail de parfumerie et de produits de beauté en magasin spécialisé" }
+  ],
+  "47.76": [
+    { "value": "47.76Z", "label": "47.76Z - Commerce de détail de fleurs, plantes, graines, engrais, animaux de compagnie et aliments pour ces animaux en magasin spécialisé" }
+  ],
+  "47.77": [
+    { "value": "47.77Z", "label": "47.77Z - Commerce de détail d'articles d'horlogerie et de bijouterie en magasin spécialisé" }
+  ],
+  "47.78": [
+    { "value": "47.78A", "label": "47.78A - Commerce de détail d'optique" },
+    { "value": "47.78B", "label": "47.78B - Commerces de détail de charbons et combustibles" },
+    { "value": "47.78C", "label": "47.78C - Autres commerces de détail spécialisés divers" }
+  ],
+  "47.79": [
+    { "value": "47.79Z", "label": "47.79Z - Commerce de détail de biens d'occasion en magasin" }
+  ],
+  "47.81": [
+    { "value": "47.81Z", "label": "47.81Z - Commerce de détail alimentaire sur éventaires et marchés" }
+  ],
+  "47.82": [
+    { "value": "47.82Z", "label": "47.82Z - Commerce de détail de textiles, d'habillement et de chaussures sur éventaires et marchés" }
+  ],
+  "47.89": [
+    { "value": "47.89Z", "label": "47.89Z - Autres commerces de détail sur éventaires et marchés" }
+  ],
+  "47.91": [
+    { "value": "47.91A", "label": "47.91A - Vente à distance sur catalogue général" },
+    { "value": "47.91B", "label": "47.91B - Vente à distance sur catalogue spécialisé" }
+  ],
+  "47.99": [
+    { "value": "47.99A", "label": "47.99A - Vente à domicile" },
+    { "value": "47.99B", "label": "47.99B - Vente par automates et autres commerces de détail hors magasin, éventaires ou marchés n.c.a." }
+  ],
+  "49.10": [
+    { "value": "49.10Z", "label": "49.10Z - Transport ferroviaire interurbain de voyageurs" }
+  ],
+  "49.20": [
+    { "value": "49.20Z", "label": "49.20Z - Transports ferroviaires de fret" }
+  ],
+  "49.31": [
+    { "value": "49.31Z", "label": "49.31Z - Transports urbains et suburbains de voyageurs" }
+  ]
   }
 }
