@@ -17,7 +17,7 @@ const Aide = memo(() => {
       </Typography>
       <br />
       <Typography variant="h6" component="h1" gutterBottom>
-          - Questions les plus fréquentes :
+          Questions les plus fréquentes :
       </Typography>
       <Box sx={{ mt: 4, mb: 2 }}>
         {faqs.map((faq, index) => (
