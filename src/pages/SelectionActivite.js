@@ -33,7 +33,7 @@ const SelectionActivite = () => {
           setAlertMessage('Erreur de chargement des données');
           setOpenSnackbar(true);
         });
-    }, 2000);
+    }, 200);
   }, []);
 
   useEffect(() => {
@@ -72,6 +72,7 @@ const SelectionActivite = () => {
 
   const handleSubclassChange = (selectedOption) => {
     setSelectedSubclass(selectedOption);
+    console.log('Sous-classe sélectionnée:', selectedOption); // Ajouter un log ici pour vérifier
   };
 
   const handleDeleteActivity = () => {
@@ -88,6 +89,7 @@ const SelectionActivite = () => {
       setOpenSnackbar(true);
     } else {
       setAlertMessage('');
+      localStorage.setItem('selectedNAF', selectedSubclass.value || '');
       navigate('/localisation-implantation');
     }
   };
@@ -124,7 +126,7 @@ const SelectionActivite = () => {
     );
   }
 
-  const subclassesOptions = data?.subclasses[selectedClass?.value] || [];
+  const subclassesOptions = data?.subclasses?.[selectedClass?.value] || [];
 
   return (
     <Container>
@@ -154,13 +156,14 @@ const SelectionActivite = () => {
       </Box>
 
       {selectedSubclass && (
-        <Paper elevation={0} style={{ padding: '4px 8px', marginBottom: '16px', width: 'fit-content', border: '1px solid #ccc' }}>
+        <Paper elevation={0} style={{ padding: '4px 8px', marginBottom: '16px', width: 'fit-content', border: '1px solid #ccc',  
+          borderLeft: '5px solid blue' }}>
           <Box display="flex" alignItems="center">
             <Typography variant="caption" style={{ marginRight: '8px' }}>
               <span style={{ color: '#286AC7' }}>Vous avez choisi l'activité</span> : {selectedSubclass.label}
             </Typography>
             <IconButton onClick={handleDeleteActivity} size="small" style={{ color: 'grey' }}>
-              <CloseIcon fontSize="small" style={{ fontSize: '16px' }} />
+              <CloseIcon fontSize="small" style={{ fontSize: '16px',  }} />
             </IconButton>
           </Box>
         </Paper>
@@ -178,7 +181,7 @@ const SelectionActivite = () => {
         }
       />
       <br />
-      <Alert variant="outlined" severity="info">
+      <Alert variant="outlined" severity="info" >
         <AlertTitle>Veuillez choisir ci-dessous l'activité souhaitée.</AlertTitle>
         Les menus se mettront à jour en fonction de votre choix précédent.
       </Alert>
