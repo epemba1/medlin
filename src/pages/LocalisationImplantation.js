@@ -20,8 +20,7 @@ const LocalisationImplantation = () => {
   const [hoveredCommune, setHoveredCommune] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [isDepartmentMenuOpen, setIsDepartmentMenuOpen] = useState(false);
-  const [isCommuneMenuOpen, setIsCommuneMenuOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [loadingGeoJson, setLoadingGeoJson] = useState(true);
   const [loadingCommunes, setLoadingCommunes] = useState(false);
   const mapRef = useRef(null);
@@ -105,6 +104,9 @@ const LocalisationImplantation = () => {
     setSelectedCommunes(selectedOptions || []);
     setErrorMessage('');
     localStorage.setItem('selectedCommunes', JSON.stringify(selectedOptions || []));
+    if (selectedOptions && selectedOptions.length > 0) {
+      centerMapOnCommune(selectedOptions[selectedOptions.length - 1].value);
+    }
   };
 
   const handleBack = () => {
@@ -112,11 +114,20 @@ const LocalisationImplantation = () => {
   };
 
   const handleNext = () => {
-    navigate('/synthese-recherche');
+    if (!selectedDepartment) {
+      setSnackbarMessage('Veuillez sélectionner un département.');
+      setOpenSnackbar(true);
+    } else {
+      navigate('/synthese-recherche');
+    }
   };
 
   const handleValidate = () => {
-    if (selectedCommunes.length === 0) {
+    if (!selectedDepartment) {
+      setSnackbarMessage('Veuillez sélectionner un département.');
+      setOpenSnackbar(true);
+    } else if (selectedCommunes.length === 0) {
+      setSnackbarMessage('Veuillez sélectionner au moins une commune.');
       setOpenSnackbar(true);
     } else {
       navigate('/synthese-recherche');
@@ -126,6 +137,28 @@ const LocalisationImplantation = () => {
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+
+  const handleReset = () => {
+    setSelectedDepartment(null);
+    setSelectedCommunes([]);
+    setCommunes([]);
+    setCommunesGeoJsonData(null);
+    localStorage.removeItem('selectedDepartment');
+    localStorage.removeItem('selectedCommunes');
+  };
+
+  const centerMapOnCommune = useCallback((communeCode) => {
+    if (communesGeoJsonData && mapRef.current) {
+      const selectedCommuneFeature = communesGeoJsonData.features.find(
+        (feature) => feature.properties.code === communeCode
+      );
+      if (selectedCommuneFeature) {
+        const { coordinates } = selectedCommuneFeature.geometry;
+        const [lng, lat] = coordinates[0][0]; // Assuming the geometry is a polygon
+        mapRef.current.setView([lat, lng], 8); // Center the map on the selected commune
+      }
+    }
+  }, [communesGeoJsonData]);
 
   const defaultStyle = {
     color: 'black',
@@ -184,10 +217,11 @@ const LocalisationImplantation = () => {
           const newSelection = [...selectedCommunes, newCommune];
           setSelectedCommunes(newSelection);
           localStorage.setItem('selectedCommunes', JSON.stringify(newSelection));
+          centerMapOnCommune(communeCode); // Center the map on the newly selected commune
         }
       }
     });
-  }, [selectedCommunes]);
+  }, [selectedCommunes, centerMapOnCommune]);
 
   return (
     <Container>
@@ -228,6 +262,8 @@ const LocalisationImplantation = () => {
           center={[46.603354, 1.888334]} 
           zoom={6} 
           style={{ height: '70vh', width: '60%', flex: 1 }}
+          scrollWheelZoom={false}
+          ref={mapRef}
           whenCreated={map => { mapRef.current = map; }}
         >
           <TileLayer
@@ -270,15 +306,12 @@ const LocalisationImplantation = () => {
                 onChange={handleDepartmentChange}
                 isSearchable
                 placeholder="Sélectionner un département"
-                menuIsOpen={isDepartmentMenuOpen}
-                onMenuOpen={() => setIsDepartmentMenuOpen(true)}
-                onMenuClose={() => setIsDepartmentMenuOpen(false)}
               />
             )}
             {selectedDepartment && (
               <>
                 <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
-                  Communes
+                  Commune(s)
                 </Typography>
                 {loadingCommunes ? (
                   <Skeleton variant="rectangular" height={56} />
@@ -290,14 +323,18 @@ const LocalisationImplantation = () => {
                     isMulti
                     isSearchable
                     placeholder="Sélectionner des communes"
-                    menuIsOpen={isCommuneMenuOpen}
-                    onMenuOpen={() => setIsCommuneMenuOpen(true)}
-                    onMenuClose={() => setIsCommuneMenuOpen(false)}
                   />
                 )}
               </>
             )}
-            <Box display="flex" justifyContent="flex-end" marginTop={2}>
+            <Box display="flex" justifyContent="flex-end" marginTop={5}>
+              <Button
+                variant="text"
+                onClick={handleReset}
+                style={{ marginRight: 10, borderRadius: '8px', textTransform: 'none' }}
+              >
+                Réinitialiser
+              </Button>
               <Button
                 variant="contained"
                 color="primary"
@@ -314,7 +351,7 @@ const LocalisationImplantation = () => {
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        message="Veuillez sélectionner au moins une commune."
+        message={snackbarMessage}
         action={
           <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
             <CloseIcon fontSize="small" />
