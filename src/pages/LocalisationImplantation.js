@@ -26,6 +26,7 @@ const LocalisationImplantation = () => {
   const mapRef = useRef(null);
   const navigate = useNavigate();
 
+  // Effect to fetch department GeoJSON data on component mount
   useEffect(() => {
     axios.get('/contour-des-departements.geojson')
       .then(response => {
@@ -44,6 +45,8 @@ const LocalisationImplantation = () => {
       });
   }, []);
 
+
+  // Effect to load selected department and communes from localStorage
   useEffect(() => {
     const savedDepartment = localStorage.getItem('selectedDepartment');
     const savedCommunes = localStorage.getItem('selectedCommunes');
@@ -67,6 +70,8 @@ const LocalisationImplantation = () => {
     }
   }, []);
 
+
+  // Effect to fetch communes data when a department is selected
   useEffect(() => {
     if (selectedDepartment) {
       setCommunesGeoJsonData(null);
@@ -92,6 +97,10 @@ const LocalisationImplantation = () => {
     }
   }, [selectedDepartment]);
 
+  /**
+   * Handle department change event.
+   * @param {object} selectedOption - Selected department option.
+   */
   const handleDepartmentChange = (selectedOption) => {
     setSelectedDepartment(selectedOption);
     setSelectedCommunes([]);
@@ -99,6 +108,11 @@ const LocalisationImplantation = () => {
     localStorage.setItem('selectedDepartment', JSON.stringify(selectedOption));
     localStorage.removeItem('selectedCommunes');
   };
+
+  /**
+   * Handle commune change event.
+   * @param {array} selectedOptions - Selected communes options.
+   */
 
   const handleCommuneChange = (selectedOptions) => {
     setSelectedCommunes(selectedOptions || []);
@@ -122,6 +136,9 @@ const LocalisationImplantation = () => {
     }
   };
 
+  /**
+   * Validate the current selection and navigate to the summary page.
+   */
   const handleValidate = () => {
     if (!selectedDepartment) {
       setSnackbarMessage('Veuillez sélectionner un département.');
@@ -138,6 +155,9 @@ const LocalisationImplantation = () => {
     setOpenSnackbar(false);
   };
 
+  /**
+   * Reset the selected department and communes.
+   */
   const handleReset = () => {
     setSelectedDepartment(null);
     setSelectedCommunes([]);
@@ -147,6 +167,10 @@ const LocalisationImplantation = () => {
     localStorage.removeItem('selectedCommunes');
   };
 
+  /**
+   * Center the map on a selected commune.
+   * @param {string} communeCode - Code of the commune to center on.
+   */
   const centerMapOnCommune = useCallback((communeCode) => {
     if (communesGeoJsonData && mapRef.current) {
       const selectedCommuneFeature = communesGeoJsonData.features.find(
@@ -160,6 +184,7 @@ const LocalisationImplantation = () => {
     }
   }, [communesGeoJsonData]);
 
+  // Styles for different map features
   const defaultStyle = {
     color: 'black',
     weight: 1,
@@ -192,11 +217,21 @@ const LocalisationImplantation = () => {
     interactive: true
   };
 
+  /**
+   * Get style for a commune feature.
+   * @param {object} feature - GeoJSON feature.
+   * @returns {object} Style object for the feature.
+   */
   const getCommuneStyle = (feature) => {
     return selectedCommunes.some(c => c?.value === feature.properties.code) ? selectedCommuneStyle :
       (hoveredCommune === feature.properties.code ? hoverStyle : communeStyle);
   };
 
+  /**
+   * Event handlers for each GeoJSON feature.
+   * @param {object} feature - GeoJSON feature.
+   * @param {object} layer - Leaflet layer.
+   */
   const onEachFeature = useCallback((feature, layer) => {
     layer.on({
       mouseover: () => {
