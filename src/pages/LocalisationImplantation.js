@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+laimport React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import Select from 'react-select';
 import axios from 'axios';
@@ -244,10 +244,12 @@ const LocalisationImplantation = () => {
         const communeCode = feature.properties.code;
         const alreadySelected = selectedCommunes.some(commune => commune?.value === communeCode);
         if (alreadySelected) {
+          // If the commune is already selected, remove it from the selection
           const newSelection = selectedCommunes.filter(commune => commune?.value !== communeCode);
           setSelectedCommunes(newSelection);
           localStorage.setItem('selectedCommunes', JSON.stringify(newSelection));
         } else {
+          // If the commune is not selected, add it to the selection
           const newCommune = { value: communeCode, label: `${communeCode} - ${feature.properties.nom}` };
           const newSelection = [...selectedCommunes, newCommune];
           setSelectedCommunes(newSelection);
