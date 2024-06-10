@@ -118,7 +118,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     return {
       siren: etablissement.siren,
       denominationUniteLegale: uniteLegale.denominationUniteLegale || 'Indisponible',
-      adresse: `${adresseEtablissement.numeroVoieEtablissement} ${adresseEtablissement.typeVoieEtablissement} ${adresseEtablissement.libelleVoieEtablissement}`,
+      adresse: `${adresseEtablissement.numeroVoieEtablissement || ''} ${adresseEtablissement.typeVoieEtablissement || ''} ${adresseEtablissement.libelleVoieEtablissement || ''} `,
       commune: `${adresseEtablissement.codeCommuneEtablissement} ${adresseEtablissement.libelleCommuneEtablissement}`,
       trancheEffectifs: trancheEffectifs[uniteLegale.trancheEffectifsUniteLegale] || 'Non renseigné',
       categorieEntreprise: uniteLegale.categorieEntreprise || 'Non défini',
@@ -191,7 +191,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
             {etablissements.map((etablissement, index) => {
               const transformedData = transformData(etablissement);
               return (
-                <TableRow key={index} style={{backgroundColor: index % 2 === 0 ? 'lightgrey' : 'white'}}>
+                <TableRow key={index} style={{backgroundColor: index % 2 === 0 ? '#f5f5f5' : 'white'}}>
                   <TableCell>{transformedData.siren}</TableCell>
                   <TableCell>{transformedData.denominationUniteLegale}</TableCell>
                   <TableCell>{transformedData.adresse}</TableCell>
