@@ -1,16 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Container, Paper, Typography, Box, Tabs, Tab, IconButton, Tooltip } from '@mui/material';
+import { Container, Paper, Typography, Box, Tabs, Tab, IconButton, Tooltip, Divider, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import PopulationTab from './PopulationTab';
 import EntreprisesTab from './EntreprisesTab';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
 
 const SyntheseRecherche = () => {
   const [selectedNAF, setSelectedNAF] = useState('');
+  const [selectedNAF1, setSelectedNAF1] = useState('');
   const [selectedCommunes, setSelectedCommunes] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
   const populationRef = useRef();
   const entreprisesRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const naf = localStorage.getItem('selectedNAF');
@@ -19,11 +25,16 @@ const SyntheseRecherche = () => {
     setSelectedCommunes(communes || []);
   }, []);
 
+  useEffect(() => {
+    const naf1 = localStorage.getItem('selectedNAF1');
+    setSelectedNAF1(naf1 || '');
+  }, []);
+
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const populationData = populationRef.current ? populationRef.current.getPopulationData() : [];
     const entreprisesData = entreprisesRef.current ? entreprisesRef.current.getEntreprisesData() : [];
 
@@ -37,17 +48,58 @@ const SyntheseRecherche = () => {
     XLSX.utils.book_append_sheet(workbook, entreprisesSheet, "Entreprises");
 
     XLSX.writeFile(workbook, "Medl'In.xlsx");
+
+    if (tabIndex === 0 && populationRef.current) {
+      const populationElement = populationRef.current.getTableElement();
+      if (populationElement) {
+        const canvas = await html2canvas(populationElement);
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'PopulationTab.png';
+        link.click();
+      }
+    }
+  };
+
+  const handleBack = () => {
+    navigate('/localisation-implantation'); // Adjust this path as needed
+  };
+
+  const handleNext = () => {
+    // Implement navigation to the next page if needed
+    navigate('/Aide'); // Adjust this path as needed
   };
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>Synthèse de la recherche</Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2} >
+        <Typography variant="h4" gutterBottom>Synthèse de la recherche</Typography>
+        <Box display="flex" alignItems="center">
+          <Button
+            variant="outlined"
+            onClick={handleBack}
+            startIcon={<NavigateBeforeIcon />}
+            style={{ marginRight: 10, borderRadius: '8px', textTransform: 'none' }}
+          >
+            Retour
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleNext}
+            endIcon={<NavigateNextIcon />}
+            style={{ borderRadius: '8px', textTransform: 'none' }}
+          >
+            Suivant
+          </Button>
+        </Box>
+      </Box>
       <Typography variant="body1" paragraph style={{ marginTop: '20px' }}>
         Veuillez trouver ci-dessous les résultats issus de votre étude.
       </Typography>
       <Paper elevation={3} style={{ padding: '16px', marginBottom: '16px' }}>
         <Typography variant="h6" gutterBottom>Activité choisie :</Typography>
-        <Typography variant="body1">{selectedNAF || 'Aucune activité choisie'}</Typography>
+        <Typography variant="body1">{selectedNAF1 || 'Aucune activité choisie'}</Typography>
       </Paper>
       <Paper elevation={3} style={{ padding: '16px', marginBottom: '16px' }}>
         <Typography variant="h6" gutterBottom>Communes choisies :</Typography>
@@ -93,18 +145,26 @@ const SyntheseRecherche = () => {
               position: 'absolute', 
               top: 0, 
               right: 0, 
-              border: '1px solid lightgrey',  // Ajoute la bordure ici
+              border: '1px solid lightgrey',
             }}
             onClick={handleDownload}
           >
             <GetAppIcon />
           </IconButton>
         </Tooltip>
-        <Box padding={2} border={1} borderColor="divider" borderRadius={2} marginTop={1} backgroundColor="white" height={600} overflow="auto">
-          {tabIndex === 0 && <PopulationTab ref={populationRef} />}
-          {tabIndex === 1 && <EntreprisesTab ref={entreprisesRef} selectedNAF={selectedNAF} selectedCommunes={selectedCommunes} />}
-        </Box>
+        <Divider style={{ marginTop: '16px' }} />
       </Box>
+      {tabIndex === 0 && (
+        <div style={{ backgroundColor: 'white', marginTop: '16px', padding: '16px' }}>
+          <PopulationTab ref={populationRef} communeCode={selectedCommunes[0]?.value} />
+        </div>
+      )}
+      {tabIndex === 1 && (
+        <div style={{ backgroundColor: 'white', marginTop: '16px', padding: '16px' }}>
+        <EntreprisesTab ref={entreprisesRef} selectedNAF={selectedNAF} selectedCommunes={selectedCommunes} />
+
+        </div>
+      )}
     </Container>
   );
 };
