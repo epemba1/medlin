@@ -7,8 +7,8 @@ const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
 
-const PopulationTab = forwardRef(({ communeCode }, ref) => {
-  const [data, setData] = useState(null);
+const PopulationTab = forwardRef(({ communeCodes }, ref) => {
+  const [data, setData] = useState([]);
   const [ageGroupLabels, setAgeGroupLabels] = useState({});
   const [sexeLabels, setSexeLabels] = useState({});
   const tableRef = useRef();
@@ -16,53 +16,56 @@ const PopulationTab = forwardRef(({ communeCode }, ref) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://api.insee.fr/donnees-locales/V0.1/donnees/geo-SEXE-AGE15_15_90@GEO2023RP2020/COM-${communeCode}.all.all`, {
-          headers: {
-            Authorization: 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
-          }
-        });
-        setData(response.data);
+        const allData = await Promise.all(communeCodes.map(async (communeCode) => {
+          const response = await axios.get(`https://api.insee.fr/donnees-locales/V0.1/donnees/geo-SEXE-AGE15_15_90@GEO2023RP2020/COM-${communeCode}.all.all`, {
+            headers: {
+              Authorization: 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
+            }
+          });
+          return response.data;
+        }));
+        setData(allData.flat());
 
-        const ageGroups = response.data.Variable.find(v => v['@code'] === 'AGE15_15_90').Modalite;
-        const ageGroupLabels = {};
-        ageGroups.forEach(group => {
-          ageGroupLabels[group['@code']] = group.Libelle;
-        });
-        setAgeGroupLabels(ageGroupLabels);
+        if (allData.length > 0) {
+          const ageGroups = allData[0].Variable.find(v => v['@code'] === 'AGE15_15_90').Modalite;
+          const ageGroupLabels = {};
+          ageGroups.forEach(group => {
+            ageGroupLabels[group['@code']] = group.Libelle;
+          });
+          setAgeGroupLabels(ageGroupLabels);
 
-        const sexes = response.data.Variable.find(v => v['@code'] === 'SEXE').Modalite;
-        const sexeLabels = {};
-        sexes.forEach(sexe => {
-          sexeLabels[sexe['@code']] = sexe.Libelle;
-        });
-        setSexeLabels(sexeLabels);
-
+          const sexeLabels = {};
+          allData[0].Variable.find(v => v['@code'] === 'SEXE').Modalite.forEach(sexe => {
+            sexeLabels[sexe['@code']] = sexe.Libelle;
+          });
+          setSexeLabels(sexeLabels);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
-    if (communeCode) {
+    if (communeCodes.length > 0) {
       fetchData();
     }
-  }, [communeCode]);
+  }, [communeCodes]);
 
   useImperativeHandle(ref, () => ({
     getPopulationData: () => {
-      if (!data) return [];
-      return data.Cellule.map(cell => ({
+      if (data.length === 0) return [];
+      return data.flatMap(d => d.Cellule.map(cell => ({
         sexe: cell.Modalite.find(mod => mod['@variable'] === 'SEXE')['@code'],
         ageGroup: cell.Modalite.find(mod => mod['@variable'] === 'AGE15_15_90')['@code'],
         valeur: Math.round(parseFloat(cell.Valeur))
-      }));
+      })));
     },
     getTableElement: () => tableRef.current
   }));
 
-  if (!data) {
+  if (data.length === 0) {
     return (
       <Box>
-        <Typography variant="h5" gutterBottom>Données Statistiques Population</Typography>
+        <Typography variant="h5" gutterBottom >Données Statistiques Population</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Box style={{ height: 400 }}>
@@ -87,21 +90,19 @@ const PopulationTab = forwardRef(({ communeCode }, ref) => {
     );
   }
 
-  const populationData = data.Cellule.map(cell => ({
+  const populationData = data.flatMap(d => d.Cellule.map(cell => ({
     sexe: cell.Modalite.find(mod => mod['@variable'] === 'SEXE')['@code'],
     ageGroup: cell.Modalite.find(mod => mod['@variable'] === 'AGE15_15_90')['@code'],
     valeur: Math.round(parseFloat(cell.Valeur))
-  }));
+  })));
 
   const ageGroups = [...new Set(populationData.map(d => d.ageGroup))]
     .sort((a, b) => a.localeCompare(b));
 
-  const sexes = [...new Set(populationData.map(d => d.sexe))]
-    .sort((a, b) => a.localeCompare(b));
-
   const getPopulationValue = (sexe, ageGroup) => {
-    const found = populationData.find(d => d.sexe === sexe && d.ageGroup === ageGroup);
-    return found ? found.valeur : 0;
+    return populationData
+      .filter(d => d.sexe === sexe && d.ageGroup === ageGroup)
+      .reduce((sum, d) => sum + d.valeur, 0);
   };
 
   const malePopulation = getPopulationValue('1', 'ENS');
@@ -113,7 +114,7 @@ const PopulationTab = forwardRef(({ communeCode }, ref) => {
 
   return (
     <Box>
-      <Typography variant="h5" gutterBottom>Données Statistiques Population</Typography>
+      <Typography variant="h5" gutterBottom style={{marginBottom: '70px'}}>Données Statistiques Population</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Box style={{ height: 400 }}>
@@ -199,30 +200,28 @@ const PopulationTab = forwardRef(({ communeCode }, ref) => {
                   type: 'bar',
                   x: ageGroups.map(code => ageGroupLabels[code]),
                   y: maleAgeDistribution,
-                  name: sexeLabels['1'],
-                  marker: { color: 'blue' }
+                  name: 'Hommes'
                 },
                 {
                   type: 'bar',
                   x: ageGroups.map(code => ageGroupLabels[code]),
                   y: femaleAgeDistribution,
-                  name: sexeLabels['2'],
-                  marker: { color: '' }
+                  name: 'Femmes'
                 }
               ]}
-              layout={{ title: 'Distribution par Âge et Sexe', autosize: true, barmode: 'stack' }}
+              layout={{ title: 'Répartition par âge et sexe', autosize: true, barmode: 'group' }}
               style={{ width: '100%', height: '100%' }}
             />
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>
-          <TableContainer component={Paper} >
-            <Table >
-              <TableHead style={{ backgroundColor: 'grey' }}>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead style={{ backgroundColor: 'grey'}}>
                 <TableRow>
                   <TableCell style={{ color: 'white'}}>Tranche d'âge</TableCell>
-                  <TableCell style={{ color: 'white'}}>{sexeLabels['1']}</TableCell>
-                  <TableCell style={{ color: 'white'}}>{sexeLabels['2']}</TableCell>
+                  <TableCell style={{ color: 'white'}}>Hommes</TableCell>
+                  <TableCell style={{ color: 'white'}}>Femmes</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
