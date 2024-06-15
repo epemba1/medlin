@@ -25,6 +25,7 @@ const LocalisationImplantation = () => {
   const mapRef = useRef(null);
   const navigate = useNavigate();
 
+  //Fetch
   useEffect(() => {
     axios.get('/contour-des-departements.geojson')
       .then(response => {
