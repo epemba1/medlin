@@ -157,6 +157,7 @@ const LocalisationImplantation = () => {
       fillOpacity: 0,
       transition: 'all 0.3s ease',
       interactive: false
+      //Null
     },
     selected: {
       color: '#e4003a',
