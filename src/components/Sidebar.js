@@ -33,6 +33,7 @@ const SidebarContainer = styled('div')(({ theme, sidebarOpen }) => ({
   overflowX: 'hidden',
 }));
 
+//Theme material ui
 const StyledListItemIcon = styled(ListItemIcon)({
   minWidth: 36,
 });
