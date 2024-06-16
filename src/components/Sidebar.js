@@ -20,6 +20,7 @@ const menuItems = [
   { text: 'Aide', icon: <HelpOutlineOutlinedIcon />, activeIcon: <HelpIcon />, path: '/aide' },
 ];
 
+//Customise
 const SidebarContainer = styled('div')(({ theme, sidebarOpen }) => ({
   width: sidebarOpen ? 280 : 64,
   transition: 'width 0.3s',
