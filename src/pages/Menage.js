@@ -3,6 +3,7 @@ import axios from 'axios';
 import Plot from 'react-plotly.js';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid, Typography, CircularProgress } from '@mui/material';
 
+//Number format
 const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
