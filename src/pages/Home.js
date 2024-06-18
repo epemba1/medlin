@@ -1,17 +1,23 @@
 import React from 'react';
+import { Container, Typography, Button, Box, styled } from '@mui/material';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useNavigate } from 'react-router-dom';
-import { Container, Box, Grid, Card, CardContent, Typography, Button, Paper } from '@mui/material';
+import Footer from './Footer';
+import StepsSection from './StepsSection';
 
-// Chemins des icônes dans le dossier public
-const BusinessCenterIcon = '/machine-vision-svgrepo-com.svg';
-const LocationOnIcon = '/intelligent-positioning-svgrepo-com.svg';
-const SummarizeIcon = '/data-analysis-svgrepo-com.svg';
-
-const steps = [
-  { id: 1, title: "Sélection d'une ou plusieurs activités associées: utilisez le menu ", strongText: "Sélection de l'activité", icon: <img src={BusinessCenterIcon} alt="Business Center Icon" style={{ width: '60px', height: '60px' }} /> },
-  { id: 2, title: "Sélection géographique autour de votre zone d'implantation: utilisez le menu ", strongText: "Localisation d'implantation", icon: <img src={LocationOnIcon} alt="Location On Icon" style={{ width: '60px', height: '60px' }} /> },
-  { id: 3, title: "Édition d'un dossier statistique: utilisez le menu ", strongText: "Synthèse de la recherche", icon: <img src={SummarizeIcon} alt="Summarize Icon" style={{ width: '60px', height: '60px' }} /> }
-];
+// Styled button
+const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: '#e4003a',
+  color: '#fff',
+  fontWeight: 'bold',
+  padding: theme.spacing(1.5, 4),
+  marginTop: theme.spacing(4),
+  '&:hover': {
+    backgroundColor: '#d40033',
+  },
+  display: 'flex',
+  alignItems: 'center',
+}));
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,54 +27,54 @@ const Home = () => {
   };
 
   return (
-    <Container sx={{ mt: 5 }}>
-      <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center', color: '#e4003a' }}>
-        Mon entreprise avec les données de l'Insee
-      </Typography>
-      <br />
-      <br />
-      <Typography variant="h6" component="p">
-        Votre étude d'implantation se déroule en 3 étapes :
-      </Typography>
-      <Grid container spacing={4} sx={{ mt: 4 }}>
-        {steps.map((step) => (
-          <Grid item xs={12} md={4} key={step.id}>
-            <Box display="flex" justifyContent="center" mb={1}>
-              <Paper
-                elevation={3}
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: '#3f51b5',
-                  color: '#fff'
-                }}
-              >
-                {step.id}
-              </Paper>
-            </Box>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'white' }}>
-              <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {step.icon}
-                <Typography variant="h6" component="h2" sx={{ mt: 2, textAlign: 'center' }}>
-                  {step.title}<strong>{step.strongText}</strong>
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-      <br />
-      <br />
-      <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Button variant="contained" size="large" onClick={handleStartStudy}>
-          Commencer l'étude
-        </Button>
+    <>
+      <Box
+        sx={{
+          backgroundColor: '#f5f5f5',
+          paddingLeft: 2,
+          paddingRight: 2,
+          paddingTop: 6,
+          paddingBottom: 0, // Set bottom padding to 0
+        }}
+      >
+        <Container
+          maxWidth="lg"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            mt: 2,
+            mb: 0,
+            px: 2,
+            pb: 2, // Adjust bottom padding if necessary
+          }}
+        >
+          <Typography variant="h3" component="h1">
+            Mon entreprise
+          </Typography>
+          <Typography variant="h3" component="h1" gutterBottom>
+            avec les données de l'Insee
+          </Typography>
+          <Typography variant="h6" component="p" sx={{ mt: 2, mb: 4 }}>
+            Une solution complète pour vous aider à réaliser des études de marché approfondies.
+            Conçue pour les futurs créateurs d'entreprises, notre application utilise les données de l'Insee
+            <span style={{ color: 'blue' }}> pour vous fournir des analyses fiables et détaillées.</span>
+          </Typography>
+          <StyledButton onClick={handleStartStudy} variant="contained" size="large">
+            Commencer l'étude
+            <ArrowForwardIosIcon sx={{ ml: 1 }} />
+          </StyledButton>
+          <img
+            src="/Analysis-pana.svg"
+            alt="Analysis Illustration"
+            style={{ marginTop: 40, height: 400, width: '100%' }}
+          />
+        </Container>
       </Box>
-    </Container>
+      <StepsSection /> {/* Add the StepsSection component here */}
+      <Footer /> {/* Add the Footer component here */}
+    </>
   );
 };
 
