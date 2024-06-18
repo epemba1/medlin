@@ -3,7 +3,6 @@ import axios from 'axios';
 import Plot from 'react-plotly.js';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid, Typography, CircularProgress } from '@mui/material';
 
-//Number format
 const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
@@ -46,7 +45,7 @@ const fetchData = async (communeCodes, urlTemplate) => {
     }
     if (curr.Cellule && Array.isArray(curr.Cellule)) {
       curr.Cellule.forEach(cell => {
-        const found = acc.Cellule.find(c => 
+        const found = acc.Cellule.find(c =>
           c.Modalite['@code'] === cell.Modalite['@code'] &&
           c.Modalite['@variable'] === cell.Modalite['@variable'] &&
           c.Mesure['@code'] === cell.Mesure['@code']
@@ -74,10 +73,12 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
         const menageUrl = 'https://api.insee.fr/donnees-locales/V0.1/donnees/geo-CS1_8@GEO2023RP2020/COM-{communeCode}.all';
         const mergedData = await fetchData(communeCodes, menageUrl);
         console.log('Fetched data:', mergedData); // Debugging fetched data
+        //alert('Fetched data: ' + JSON.stringify(mergedData)); // Debugging fetched data
         setData(mergedData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        //alert('Error fetching data: ' + error); // Debugging error
         setLoading(false);
       }
     };
@@ -106,8 +107,6 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
   const transformDataForTable = (data) => {
     if (!data || !data.Cellule || !data.Variable) return [];
 
-    console.log('Transforming data:', data); // Debugging raw data
-
     const csVariable = data.Variable;
 
     const categoryLabels = {};
@@ -133,7 +132,8 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
       }
     });
 
-    console.log('Category data:', categoryData); // Debugging transformed data
+    console.log('Transformed data for table:', categoryData); // Debugging transformed data
+    //alert('Transformed data for table: ' + JSON.stringify(categoryData)); // Debugging transformed data
 
     return Object.entries(categoryData).map(([csCode, values]) => ({
       category: categoryLabels[csCode],
@@ -143,47 +143,44 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
   };
 
   const tableData = transformDataForTable(data);
-  console.log('Table data:', tableData); // Debugging table data
+  const chartData = tableData.filter(row => row.category !== 'Ensemble');
 
-  const chartData = tableData.filter(row => row.category && row.category !== 'Ensemble');
   console.log('Chart data:', chartData); // Debugging chart data
+  //alert('Chart data: ' + JSON.stringify(chartData)); // Debugging chart data
 
-  const chartCategories = chartData.map(row => row.category);
-  const chartPopulation = chartData.map(row => row.Population);
-  const chartLogements = chartData.map(row => row.NombreDeLogements);
-
-  // Check for empty or undefined values in chart data
-  if (chartCategories.includes(undefined) || chartPopulation.includes(undefined) || chartLogements.includes(undefined)) {
-    console.error('Undefined values found in chart data', { chartCategories, chartPopulation, chartLogements });
+  if (chartData.length === 0 && tableData.length === 0) {
+    return (
+      <Box style={{ textAlign: 'center', marginTop: '20px' }}>
+      <img src='/no-results.png' alt="No results" style={{ width: '200px', height: '200px',marginTop: '20px', marginBottom:'10px' }} />
+      <Typography variant='h5'>Ups... résultats non trouvés</Typography>
+      <Typography variant='h6'>Veuillez sélectionner une autre commune</Typography>
+    </Box>
+    );
   }
-
-  console.log('Chart categories:', chartCategories);
-  console.log('Chart population:', chartPopulation);
-  console.log('Chart logements:', chartLogements);
 
   return (
     <Box>
-      <Typography variant="h6" style={{ textAlign: 'center' }}>Données des ménages</Typography>
+      <Typography variant="h6" mt={6} mb={6}  style={{ textAlign: 'center' }}>Ménages selon la catégorie socioprofessionnelle de la personne de référence </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Box style={{ height: 600 }}>
             <Plot
               data={[
                 {
-                  x: chartCategories,
-                  y: chartLogements,
-                  type: 'bar',
-                  name: 'Nombre de Logements',
-                  marker: { color: 'orange' },
-                  hovertemplate: '%{x}<br>Nombre de Logements: %{y:,}<extra></extra>'
-                },
-                {
-                  x: chartCategories,
-                  y: chartPopulation,
+                  x: chartData.map(row => row.category),
+                  y: chartData.map(row => row.Population),
                   type: 'bar',
                   name: 'Population',
                   marker: { color: 'blue' },
                   hovertemplate: '%{x}<br>Population: %{y:,}<extra></extra>'
+                },
+                {
+                  x: chartData.map(row => row.category),
+                  y: chartData.map(row => row.NombreDeLogements),
+                  type: 'bar',
+                  name: 'Nombre de Logements',
+                  marker: { color: 'orange' },
+                  hovertemplate: '%{x}<br>Nombre de Logements: %{y:,}<extra></extra>'
                 }
               ]}
               layout={{
@@ -207,17 +204,17 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
             <Table ref={tableRef}>
               <TableHead style={{ backgroundColor: 'grey' }}>
                 <TableRow>
-                  <TableCell style={{ color: 'white' }}>Catégorie Socioprofessionnelle</TableCell>
+                  <TableCell style={{ color: 'white',  }}>Catégorie Socioprofessionnelle</TableCell>
+                  <TableCell style={{ color: 'white' }}>Population des ménages</TableCell>
                   <TableCell style={{ color: 'white' }}>Nombre de Logements</TableCell>
-                  <TableCell style={{ color: 'white' }}>Population</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {tableData.map((row, index) => (
                   <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : 'white' }}>
-                    <TableCell>{row.category}</TableCell>
-                    <TableCell>{formatNumber(row.NombreDeLogements)}</TableCell>
-                    <TableCell>{formatNumber(row.Population)}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.category}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{formatNumber(row.Population)}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{formatNumber(row.NombreDeLogements)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
