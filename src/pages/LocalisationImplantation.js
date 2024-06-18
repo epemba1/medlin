@@ -82,7 +82,6 @@ const LocalisationImplantation = () => {
               value: commune.properties.code,
               label: `${commune.properties.code} - ${commune.properties.nom}`
             }));
-            console.log('Communes List:', communesList);
             setCommunes(communesList);
           }
           setLoadingCommunes(false);
@@ -157,14 +156,14 @@ const LocalisationImplantation = () => {
       weight: 1,
       fillOpacity: 0,
       transition: 'all 0.3s ease',
-      interactive: false
+      interactive: true
     },
     selected: {
       color: '#e4003a',
       weight: 1,
       fillOpacity: 0.5,
       transition: 'all 0.3s ease',
-      interactive: false
+      interactive: true
     },
     commune: {
       color: 'blue',
@@ -188,6 +187,7 @@ const LocalisationImplantation = () => {
   };
 
   const onEachFeature = useCallback((feature, layer) => {
+    layer.bindTooltip(feature.properties.nom);
     layer.on({
       mouseover: () => {
         setHoveredCommune(feature.properties.code);
@@ -215,10 +215,25 @@ const LocalisationImplantation = () => {
     });
   }, []);
 
+  const onEachDepartmentFeature = useCallback((feature, layer) => {
+    layer.bindTooltip(feature.properties.nom);
+    layer.on({
+      click: () => {
+        const departmentCode = feature.properties.code;
+        const departmentName = feature.properties.nom;
+        const selectedOption = { value: departmentCode, label: `${departmentCode} - ${departmentName}` };
+        handleDepartmentChange(selectedOption);
+      }
+    });
+  }, []);
+
+  const getDepartmentStyle = (feature) => {
+    return selectedDepartment && selectedDepartment.value === feature.properties.code ? styles.selected : styles.default;
+  };
 
   return (
     <Container>
-      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2} >
+      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
         <Typography variant="h4" gutterBottom>
           Localisation d'implantation
         </Typography>
@@ -242,7 +257,7 @@ const LocalisationImplantation = () => {
           </Button>
         </Box>
       </Box>
-      <MuiAlert severity="info" variant="outlined" style={{ marginBottom: '20px'}}>
+      <MuiAlert severity="info" variant="outlined" style={{ marginBottom: '20px' }}>
         Veuillez choisir votre zone d'implantation en sélectionnant dans la liste de département ou directement sur la carte.
       </MuiAlert>
       <Box display="flex">
@@ -262,7 +277,8 @@ const LocalisationImplantation = () => {
             geoJsonData && (
               <GeoJSON
                 data={geoJsonData}
-                style={styles.default}
+                style={getDepartmentStyle}
+                onEachFeature={onEachDepartmentFeature}
               />
             )
           )}
