@@ -25,7 +25,6 @@ const LocalisationImplantation = () => {
   const mapRef = useRef(null);
   const navigate = useNavigate();
 
-  //Fetch
   useEffect(() => {
     axios.get('/contour-des-departements.geojson')
       .then(response => {
@@ -106,9 +105,10 @@ const LocalisationImplantation = () => {
 
   const handleCommuneChange = (selectedOptions) => {
     setSelectedCommunes(selectedOptions || []);
-    const communeNames = selectedOptions ? selectedOptions.map(option => option.label.split(' - ')[1]) : [];
-    console.log('Selected communes:', selectedOptions);
-    console.log('Selected commune names:', communeNames);
+    const communeNames = selectedOptions ? selectedOptions.map(option => {
+      const [code, name] = option.label.split(' - ');
+      return `${name}(${code})`;
+    }) : [];
     localStorage.setItem('selectedCommunes', JSON.stringify(selectedOptions || []));
     localStorage.setItem('selectedCommuneNames', JSON.stringify(communeNames));
   };
@@ -158,7 +158,6 @@ const LocalisationImplantation = () => {
       fillOpacity: 0,
       transition: 'all 0.3s ease',
       interactive: false
-      //Null
     },
     selected: {
       color: '#e4003a',
@@ -198,26 +197,24 @@ const LocalisationImplantation = () => {
       },
       click: () => {
         const communeCode = feature.properties.code;
+        const communeName = feature.properties.nom;
         setSelectedCommunes((prevSelectedCommunes) => {
           const alreadySelected = prevSelectedCommunes.some(commune => commune?.value === communeCode);
-          if (alreadySelected) {
-            const newSelection = prevSelectedCommunes.filter(commune => commune?.value !== communeCode);
-            const communeNames = newSelection.map(option => option.label.split(' - ')[1]); // Définir communeNames ici
-            localStorage.setItem('selectedCommunes', JSON.stringify(newSelection));
-            localStorage.setItem('selectedCommuneNames', JSON.stringify(communeNames));
-            return newSelection;
-          } else {
-            const newCommune = { value: communeCode, label: `${communeCode} - ${feature.properties.nom}` };
-            const newSelection = [...prevSelectedCommunes, newCommune];
-            const communeNames = newSelection.map(option => option.label); // Définir communeNames ici
-            localStorage.setItem('selectedCommunes', JSON.stringify(newSelection));
-            localStorage.setItem('selectedCommuneNames', JSON.stringify(communeNames));
-            return newSelection;
-          }
+          const newSelection = alreadySelected
+            ? prevSelectedCommunes.filter(commune => commune?.value !== communeCode)
+            : [...prevSelectedCommunes, { value: communeCode, label: `${communeCode} - ${communeName}` }];
+          const communeNames = newSelection.map(option => {
+            const [code, name] = option.label.split(' - ');
+            return `${name}(${code})`;
+          });
+          localStorage.setItem('selectedCommunes', JSON.stringify(newSelection));
+          localStorage.setItem('selectedCommuneNames', JSON.stringify(communeNames));
+          return newSelection;
         });
       }
     });
   }, []);
+
 
   return (
     <Container>
