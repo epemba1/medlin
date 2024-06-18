@@ -49,11 +49,36 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const mapRef = useRef(null);
 
-  useEffect(() => {
+    useEffect(() => {
+    const fetchWithThrottle = (requests, delay) => {
+      let index = 0;
+      const results = [];
+      const errors = [];
+
+      const execute = async () => {
+        if (index < requests.length) {
+          try {
+            const result = await requests[index]();
+            results.push(result);
+          } catch (error) {
+            errors.push(error);
+          }
+          index++;
+          setTimeout(execute, delay);
+        } else {
+          // All requests are done
+          const combinedResults = results.flatMap(result => result);
+          setEtablissements(combinedResults);
+        }
+      };
+
+      execute();
+    };
+
     if (selectedNAF && selectedCommunes.length > 0) {
       const fetchEtablissements = selectedCommunes.map(commune => {
         const codeCommune = commune.value;
-        return fetch(`https://api.insee.fr/entreprises/sirene/V3.11/siret?q=periode(activitePrincipaleEtablissement%3A${selectedNAF}%20AND%20etatAdministratifEtablissement%3AA)%20AND%20codeCommuneEtablissement%3A${codeCommune}`, {
+        return () => fetch(`https://api.insee.fr/entreprises/sirene/V3.11/siret?q=periode(activitePrincipaleEtablissement%3A${selectedNAF}%20AND%20etatAdministratifEtablissement%3AA)%20AND%20codeCommuneEtablissement%3A${codeCommune}`, {
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
@@ -67,12 +92,8 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
           .then(response => response.json());
       });
 
-      Promise.all(fetchEtablissements)
-        .then(results => {
-          const allEtablissements = results.flatMap(data => data.etablissements || []);
-          setEtablissements(allEtablissements);
-        })
-        .catch(error => console.error('Error fetching data:', error));
+      // Throttle the requests
+      fetchWithThrottle(fetchEtablissements, 1000); // Adjust the delay as needed
 
       Promise.all(fetchCommuneBoundaries)
         .then(results => {
@@ -91,7 +112,6 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
         .catch(error => console.error('Error fetching commune boundaries:', error));
     }
   }, [selectedNAF, selectedCommunes]);
-
   useImperativeHandle(ref, () => ({
     getEntreprisesData: () => {
       return etablissements.map(etablissement => transformData(etablissement));
