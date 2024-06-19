@@ -143,6 +143,13 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
   };
 
   const tableData = transformDataForTable(data);
+
+  // Déplacer la dernière ligne au deuxième index
+  if (tableData.length > 1) {
+    const lastRow = tableData.pop();
+    tableData.splice(0, 0, lastRow);
+  }
+
   const chartData = tableData.filter(row => row.category !== 'Ensemble');
 
   console.log('Chart data:', chartData); // Debugging chart data
@@ -151,16 +158,16 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
   if (chartData.length === 0 && tableData.length === 0) {
     return (
       <Box style={{ textAlign: 'center', marginTop: '20px' }}>
-      <img src='/no-results.png' alt="No results" style={{ width: '200px', height: '200px',marginTop: '20px', marginBottom:'10px' }} />
-      <Typography variant='h5'>Ups... résultats non trouvés</Typography>
-      <Typography variant='h6'>Veuillez sélectionner une autre commune</Typography>
-    </Box>
+        <img src='/no-results.png' alt="No results" style={{ width: '200px', height: '200px', marginTop: '20px', marginBottom: '10px' }} />
+        <Typography variant='h5'>Ups... résultats non trouvés</Typography>
+        <Typography variant='h6'>Veuillez sélectionner une autre commune</Typography>
+      </Box>
     );
   }
 
   return (
     <Box>
-      <Typography variant="h6" mt={6} mb={6}  style={{ textAlign: 'center' }}>Ménages selon la catégorie socioprofessionnelle de la personne de référence </Typography>
+      <Typography variant="h6" mt={6} mb={6} style={{ textAlign: 'center' }}>Ménages selon la catégorie socioprofessionnelle de la personne de référence </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Box style={{ height: 600 }}>
@@ -168,19 +175,19 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
               data={[
                 {
                   x: chartData.map(row => row.category),
+                  y: chartData.map(row => row.NombreDeLogements),
+                  type: 'bar',
+                  name: 'Nombre de ménages',
+                  marker: { color: 'orange' },
+                  hovertemplate: '%{x}<br>Nombre de ménages: %{y:,}<extra></extra>'
+                },
+                {
+                  x: chartData.map(row => row.category),
                   y: chartData.map(row => row.Population),
                   type: 'bar',
                   name: 'Population',
                   marker: { color: 'blue' },
                   hovertemplate: '%{x}<br>Population: %{y:,}<extra></extra>'
-                },
-                {
-                  x: chartData.map(row => row.category),
-                  y: chartData.map(row => row.NombreDeLogements),
-                  type: 'bar',
-                  name: 'Nombre de Logements',
-                  marker: { color: 'orange' },
-                  hovertemplate: '%{x}<br>Nombre de Logements: %{y:,}<extra></extra>'
                 }
               ]}
               layout={{
@@ -204,17 +211,17 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
             <Table ref={tableRef}>
               <TableHead style={{ backgroundColor: 'grey' }}>
                 <TableRow>
-                  <TableCell style={{ color: 'white',  }}>Catégorie Socioprofessionnelle</TableCell>
+                  <TableCell style={{ color: 'white' }}>Catégorie Socioprofessionnelle</TableCell>
+                  <TableCell style={{ color: 'white' }}>Nombre de ménages</TableCell>
                   <TableCell style={{ color: 'white' }}>Population des ménages</TableCell>
-                  <TableCell style={{ color: 'white' }}>Nombre de Logements</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {tableData.map((row, index) => (
                   <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : 'white' }}>
-                    <TableCell style={{ textAlign: 'center' }}>{row.category}</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>{formatNumber(row.Population)}</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>{formatNumber(row.NombreDeLogements)}</TableCell>
+                    <TableCell style={{ textAlign: 'center', fontWeight: row.category === 'Ensemble' ? 'bold' : 'normal' }}>{row.category}</TableCell>
+                    <TableCell style={{ textAlign: 'center', fontWeight: row.category === 'Ensemble' ? 'bold' : 'normal' }}>{formatNumber(row.NombreDeLogements)}</TableCell>
+                    <TableCell style={{ textAlign: 'center', fontWeight: row.category === 'Ensemble' ? 'bold' : 'normal' }}>{formatNumber(row.Population)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
