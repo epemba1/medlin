@@ -8,54 +8,46 @@ const formatNumber = (num) => {
 };
 
 const fetchData = async (communeCodes, urlTemplate) => {
-  const responses = await Promise.all(communeCodes.map(async (communeCode) => {
-    let response;
-    let retryCount = 0;
-    const maxRetries = 5;
-    const retryDelay = 1000; // 1 second
-
-    while (retryCount < maxRetries) {
-      try {
-        response = await axios.get(urlTemplate.replace('{communeCode}', communeCode), {
-          headers: {
-            Authorization: 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
-          }
-        });
-        break; // Break out of the loop if request is successful
-      } catch (error) {
-        if (error.response && error.response.status === 429) {
-          retryCount++;
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
-        } else {
-          throw error;
-        }
-      }
-    }
-
-    if (response) {
-      return response.data;
-    } else {
-      throw new Error(`Failed to fetch data for commune code: ${communeCode}`);
-    }
-  }));
-
-  return responses.reduce((acc, curr) => {
-    if (!acc.Variable && curr.Variable) {
-      acc.Variable = curr.Variable;
-    }
-    if (curr.Cellule && Array.isArray(curr.Cellule)) {
-      curr.Cellule.forEach(cell => {
-        const found = acc.Cellule.find(c =>
-          c.Modalite['@code'] === cell.Modalite['@code'] &&
-          c.Modalite['@variable'] === cell.Modalite['@variable'] &&
-          c.Mesure['@code'] === cell.Mesure['@code']
-        );
-        if (found) {
-          found.Valeur = (parseFloat(found.Valeur) + parseFloat(cell.Valeur)).toString();
-        } else {
-          acc.Cellule.push({ ...cell });
+  const fetchWithRetry = async (communeCode, retries = 5, delay = 1000) => {
+    try {
+      const response = await axios.get(urlTemplate.replace('{communeCode}', communeCode), {
+        headers: {
+          Authorization: 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
         }
       });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 429 && retries > 0) {
+        console.warn(`Rate limited, retrying commune code: ${communeCode}, retries left: ${retries}`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return fetchWithRetry(communeCode, retries - 1, delay * 2); // Exponential backoff
+      } else {
+        console.error(`Failed to fetch data for commune code: ${communeCode}`, error);
+        return null;
+      }
+    }
+  };
+
+  const responses = await Promise.all(communeCodes.map(communeCode => fetchWithRetry(communeCode)));
+  return responses.reduce((acc, curr) => {
+    if (curr) {
+      if (!acc.Variable && curr.Variable) {
+        acc.Variable = curr.Variable;
+      }
+      if (curr.Cellule && Array.isArray(curr.Cellule)) {
+        curr.Cellule.forEach(cell => {
+          const found = acc.Cellule.find(c =>
+            c.Modalite['@code'] === cell.Modalite['@code'] &&
+            c.Modalite['@variable'] === cell.Modalite['@variable'] &&
+            c.Mesure['@code'] === cell.Mesure['@code']
+          );
+          if (found) {
+            found.Valeur = (parseFloat(found.Valeur) + parseFloat(cell.Valeur)).toString();
+          } else {
+            acc.Cellule.push({ ...cell });
+          }
+        });
+      }
     }
     return acc;
   }, { Cellule: [] });
@@ -73,12 +65,10 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
         const menageUrl = 'https://api.insee.fr/donnees-locales/V0.1/donnees/geo-CS1_8@GEO2023RP2020/COM-{communeCode}.all';
         const mergedData = await fetchData(communeCodes, menageUrl);
         console.log('Fetched data:', mergedData); // Debugging fetched data
-        //alert('Fetched data: ' + JSON.stringify(mergedData)); // Debugging fetched data
         setData(mergedData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        //alert('Error fetching data: ' + error); // Debugging error
         setLoading(false);
       }
     };
@@ -133,7 +123,6 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
     });
 
     console.log('Transformed data for table:', categoryData); // Debugging transformed data
-    //alert('Transformed data for table: ' + JSON.stringify(categoryData)); // Debugging transformed data
 
     return Object.entries(categoryData).map(([csCode, values]) => ({
       category: categoryLabels[csCode],
@@ -144,7 +133,7 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
 
   const tableData = transformDataForTable(data);
 
-  // Déplacer la dernière ligne au deuxième index
+  // Move the last row to the second index
   if (tableData.length > 1) {
     const lastRow = tableData.pop();
     tableData.splice(0, 0, lastRow);
@@ -153,7 +142,6 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
   const chartData = tableData.filter(row => row.category !== 'Ensemble');
 
   console.log('Chart data:', chartData); // Debugging chart data
-  //alert('Chart data: ' + JSON.stringify(chartData)); // Debugging chart data
 
   if (chartData.length === 0 && tableData.length === 0) {
     return (
