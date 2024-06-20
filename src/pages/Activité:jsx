@@ -8,53 +8,45 @@ const formatNumber = (num) => {
 };
 
 const fetchData = async (communeCodes, urlTemplate) => {
-  const responses = await Promise.all(communeCodes.map(async (communeCode) => {
-    let response;
-    let retryCount = 0;
-    const maxRetries = 5;
-    const retryDelay = 1000; // 1 second
-
-    while (retryCount < maxRetries) {
-      try {
-        response = await axios.get(urlTemplate.replace('{communeCode}', communeCode), {
-          headers: {
-            Authorization: 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
-          }
-        });
-        break; // Break out of the loop if request is successful
-      } catch (error) {
-        if (error.response && error.response.status === 429) {
-          retryCount++;
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
-        } else {
-          throw error;
-        }
-      }
-    }
-
-    if (response) {
-      return response.data;
-    } else {
-      throw new Error(`Failed to fetch data for commune code: ${communeCode}`);
-    }
-  }));
-
-  return responses.reduce((acc, curr) => {
-    if (!acc.Variable && curr.Variable) {
-      acc.Variable = curr.Variable;
-    }
-    if (curr.Cellule && Array.isArray(curr.Cellule)) {
-      curr.Cellule.forEach(cell => {
-        const found = acc.Cellule.find(c =>
-          c.Modalite.some(mod => mod['@code'] === cell.Modalite[0]['@code']) &&
-          c.Modalite.some(mod => mod['@code'] === cell.Modalite[1]['@code'])
-        );
-        if (found) {
-          found.Valeur = (parseFloat(found.Valeur) + parseFloat(cell.Valeur)).toString();
-        } else {
-          acc.Cellule.push({ ...cell });
+  const fetchWithRetry = async (communeCode, retries = 5, delay = 1000) => {
+    try {
+      const response = await axios.get(urlTemplate.replace('{communeCode}', communeCode), {
+        headers: {
+          Authorization: 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
         }
       });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 429 && retries > 0) {
+        console.warn(`Rate limited, retrying commune code: ${communeCode}, retries left: ${retries}`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return fetchWithRetry(communeCode, retries - 1, delay * 2); // Exponential backoff
+      } else {
+        console.error(`Failed to fetch data for commune code: ${communeCode}`, error);
+        return null;
+      }
+    }
+  };
+
+  const responses = await Promise.all(communeCodes.map(communeCode => fetchWithRetry(communeCode)));
+  return responses.reduce((acc, curr) => {
+    if (curr) {
+      if (!acc.Variable && curr.Variable) {
+        acc.Variable = curr.Variable;
+      }
+      if (curr.Cellule && Array.isArray(curr.Cellule)) {
+        curr.Cellule.forEach(cell => {
+          const found = acc.Cellule.find(c =>
+            c.Modalite.some(mod => mod['@code'] === cell.Modalite[0]['@code']) &&
+            c.Modalite.some(mod => mod['@code'] === cell.Modalite[1]['@code'])
+          );
+          if (found) {
+            found.Valeur = (parseFloat(found.Valeur) + parseFloat(cell.Valeur)).toString();
+          } else {
+            acc.Cellule.push({ ...cell });
+          }
+        });
+      }
     }
     return acc;
   }, { Cellule: [] });
@@ -101,8 +93,8 @@ const Activité = forwardRef(({ communeCodes }, ref) => {
     return <CircularProgress />;
   }
 
-  const transformDataForTable = (data) => {
-    if (!data || !data.Cellule || !data.Variable) return [];
+  const transformDataForTableAndChart = (data) => {
+    if (!data || !data.Cellule || !data.Variable) return { tableData: [], chartData: [] };
 
     const csVariable = data.Variable.find(v => v['@code'] === 'CS1_6');
     const activiteVariable = data.Variable.find(v => v['@code'] === 'TACTR_2');
@@ -149,25 +141,25 @@ const Activité = forwardRef(({ communeCodes }, ref) => {
 
     console.log('Transformed data for table:', JSON.stringify(categoryData, null, 2)); // Detailed log of transformed data
 
-    return Object.entries(categoryData).map(([csCode, values]) => ({
+    const tableData = Object.entries(categoryData).map(([csCode, values]) => ({
       category: values.category,
       Ensemble: values["ENS"] || 0,
       "Actifs ayant un emploi": values["11"] || 0,
       Chômeurs: values["12"] || 0
     }));
+
+    // Move the last row to the second index
+    if (tableData.length > 1) {
+      const lastRow = tableData.pop();
+      tableData.splice(0, 0, lastRow);
+    }
+
+    const chartData = tableData.filter(row => row.category !== 'Ensemble');
+
+    return { tableData, chartData };
   };
 
-  const tableData = transformDataForTable(data);
-
-  // Déplacer la dernière ligne au deuxième index
-  if (tableData.length > 1) {
-    const lastRow = tableData.pop();
-    tableData.splice(0, 0, lastRow);
-  }
-
-  const chartData = tableData.filter(row => row.category !== 'Ensemble');
-
-  console.log('Chart data:', chartData); // Detailed log of chart data
+  const { tableData, chartData } = transformDataForTableAndChart(data);
 
   if (chartData.length === 0 && tableData.length === 0) {
     return (
@@ -201,22 +193,25 @@ const Activité = forwardRef(({ communeCodes }, ref) => {
                   type: 'bar',
                   name: 'Chômeurs',
                   marker: { color: 'orange' },
-                  hovertemplate: '%{x}<br>Nombre de Logements: %{y:,}<extra></extra>'
+                  hovertemplate: '%{x}<br>Population: %{y:,}<extra></extra>'
                 }
               ]}
               layout={{
                 title: '',
                 autosize: true,
                 barmode: 'group',
-                margin: { l: 70, r: 50, b: 50, t: 50, pad: 10 },
                 legend: {
                   orientation: 'h',
-                  y: -0.6,
-                  x: 0.2
-                }
+                  y: -2,
+                  
+                },
+                margin: { l: 100, r: 20, t: 60, b: 200 },
+                xaxis: { tickangle: -90, automargin: true },
+                yaxis: { automargin: true, title: { text: 'Population' } }
               }}
+              useResizeHandler
               style={{ width: '100%', height: '100%' }}
-              ref={el => chartsRef.current[0] = el}
+              config={{ displayModeBar: false }}
             />
           </Box>
         </Grid>
@@ -225,19 +220,21 @@ const Activité = forwardRef(({ communeCodes }, ref) => {
             <Table ref={tableRef}>
               <TableHead style={{ backgroundColor: 'grey' }}>
                 <TableRow>
-                  <TableCell style={{ color: 'white' }}>Catégorie Socioprofessionnelle</TableCell>
-                  <TableCell style={{ color: 'white' }}>Ensemble</TableCell>
-                  <TableCell style={{ color: 'white' }}>Actifs ayant un emploi</TableCell>
-                  <TableCell style={{ color: 'white' }}>Chômeurs</TableCell>
+                  <TableCell style={{ color: 'white', textAlign: 'center' }}>Catégorie Socioprofessionnelle</TableCell>
+                  
+                  <TableCell style={{ color: 'white', textAlign: 'center' }}>Actifs ayant un emploi</TableCell>
+                  <TableCell style={{ color: 'white', textAlign: 'center' }}>Chômeurs</TableCell>
+                  <TableCell style={{ color: 'white', textAlign: 'center' }}>Ensemble</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {tableData.map((row, index) => (
                   <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? 'lightgrey' : 'white' }}>
-                    <TableCell>{row.category}</TableCell>
-                    <TableCell>{formatNumber(row["Ensemble"] || 0)}</TableCell>
-                    <TableCell>{formatNumber(row["Actifs ayant un emploi"] || 0)}</TableCell>
-                    <TableCell>{formatNumber(row["Chômeurs"] || 0)}</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>{row.category}</TableCell>
+                    
+                    <TableCell style={{  textAlign: 'center' }}>{formatNumber(row["Actifs ayant un emploi"] || 0)}</TableCell>
+                    <TableCell style={{  textAlign: 'center' }}>{formatNumber(row["Chômeurs"] || 0)}</TableCell>
+                    <TableCell style={{  textAlign: 'center' }}>{formatNumber(row["Ensemble"] || 0)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
