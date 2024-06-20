@@ -4,6 +4,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Import the icon 
 
 const Aide = memo(() => {
   const faqs = [
+    //Questions and Answers
     { question: "Comment utiliser l'application Medl'In ?", answer: "Pour utiliser l'application, commencez par sélectionner une activité, puis choisissez une localisation et enfin consultez la synthèse de la recherche." },
     { question: "Comment connaître mon Naf ?", answer: "Vous le trouvez dans votre espace personnel du Guichet des formalités des entreprises dès que votre demande d'immatriculation est acceptée." },
     { question: "Quel sont les code NAF pour mon activité ?", answer: "Il vous suffit de consulter la nomenclature NAF sur le site de l'INSEE. La recherche par mots-clés vous aidera à déterminer quel code NAF est le plus approprié à l'activité de votre entreprise." },
