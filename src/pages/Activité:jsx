@@ -89,6 +89,7 @@ const Activité = forwardRef(({ communeCodes }, ref) => {
     getChartElements: () => chartsRef.current
   }));
 
+ //Loading data
   if (loading) {
     return <CircularProgress />;
   }
