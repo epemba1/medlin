@@ -151,7 +151,7 @@ const Activité = forwardRef(({ communeCodes }, ref) => {
       Chômeurs: values["12"] || 0
     }));
 
-    // Move the last row to the second index
+    // Move the last row to the first index
     if (tableData.length > 1) {
       const lastRow = tableData.pop();
       tableData.splice(0, 0, lastRow);
