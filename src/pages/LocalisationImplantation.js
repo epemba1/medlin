@@ -14,7 +14,7 @@ const LocalisationImplantation = () => {
   const [geoJsonData, setGeoJsonData] = useState(null);
   const [communesGeoJsonData, setCommunesGeoJsonData] = useState(null);
   const [departments, setDepartments] = useState([]);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [communes, setCommunes] = useState([]);
   const [selectedCommunes, setSelectedCommunes] = useState([]);
   const [hoveredCommune, setHoveredCommune] = useState(null);
@@ -44,15 +44,15 @@ const LocalisationImplantation = () => {
   }, []);
 
   useEffect(() => {
-    const savedDepartment = localStorage.getItem('selectedDepartment');
+    const savedDepartments = localStorage.getItem('selectedDepartments');
     const savedCommunes = localStorage.getItem('selectedCommunes');
 
-    if (savedDepartment) {
+    if (savedDepartments) {
       try {
-        const department = JSON.parse(savedDepartment);
-        setSelectedDepartment(department);
+        const departments = JSON.parse(savedDepartments);
+        setSelectedDepartments(departments || []);
       } catch (e) {
-        console.error('Failed to parse savedDepartment:', e);
+        console.error('Failed to parse savedDepartments:', e);
       }
     }
 
@@ -67,23 +67,24 @@ const LocalisationImplantation = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedDepartment) {
-      console.log('Selected Department:', selectedDepartment);
-      setCommunesGeoJsonData(null);
-      setCommunes([]);
+    if (selectedDepartments.length > 0) {
+      const departmentCodes = selectedDepartments.map(dept => dept.value);
       setLoadingCommunes(true);
-      axios.get(`https://geo.api.gouv.fr/departements/${selectedDepartment.value}/communes?format=geojson&geometry=contour`)
-        .then(response => {
-          const data = response.data;
-          console.log('Communes Data:', data);
-          if (data && data.features) {
-            setCommunesGeoJsonData(data);
-            const communesList = data.features.map(commune => ({
-              value: commune.properties.code,
-              label: `${commune.properties.code} - ${commune.properties.nom}`
-            }));
-            setCommunes(communesList);
-          }
+      Promise.all(departmentCodes.map(code =>
+        axios.get(`https://geo.api.gouv.fr/departements/${code}/communes?format=geojson&geometry=contour`)
+      ))
+        .then(responses => {
+          const combinedFeatures = responses.flatMap(response => response.data.features);
+          const data = {
+            type: "FeatureCollection",
+            features: combinedFeatures
+          };
+          setCommunesGeoJsonData(data);
+          const communesList = combinedFeatures.map(commune => ({
+            value: commune.properties.code,
+            label: `${commune.properties.code} - ${commune.properties.nom}`
+          }));
+          setCommunes(communesList);
           setLoadingCommunes(false);
         })
         .catch(error => {
@@ -92,13 +93,16 @@ const LocalisationImplantation = () => {
           setOpenSnackbar(true);
           setLoadingCommunes(false);
         });
+    } else {
+      setCommunes([]);
+      setCommunesGeoJsonData(null);
     }
-  }, [selectedDepartment]);
+  }, [selectedDepartments]);
 
-  const handleDepartmentChange = (selectedOption) => {
-    setSelectedDepartment(selectedOption);
+  const handleDepartmentChange = (selectedOptions) => {
+    setSelectedDepartments(selectedOptions || []);
     setSelectedCommunes([]);
-    localStorage.setItem('selectedDepartment', JSON.stringify(selectedOption));
+    localStorage.setItem('selectedDepartments', JSON.stringify(selectedOptions || []));
     localStorage.removeItem('selectedCommunes');
   };
 
@@ -106,7 +110,7 @@ const LocalisationImplantation = () => {
     setSelectedCommunes(selectedOptions || []);
     const communeNames = selectedOptions ? selectedOptions.map(option => {
       const [code, name] = option.label.split(' - ');
-      return `${name}(${code})`;
+      return `${name} (${code})`;
     }) : [];
     localStorage.setItem('selectedCommunes', JSON.stringify(selectedOptions || []));
     localStorage.setItem('selectedCommuneNames', JSON.stringify(communeNames));
@@ -117,8 +121,8 @@ const LocalisationImplantation = () => {
   };
 
   const handleNext = () => {
-    if (!selectedDepartment) {
-      setSnackbarMessage('Veuillez sélectionner un département.');
+    if (selectedDepartments.length === 0) {
+      setSnackbarMessage('Veuillez sélectionner au moins un département.');
       setOpenSnackbar(true);
     } else {
       navigate('/synthese-recherche');
@@ -126,8 +130,8 @@ const LocalisationImplantation = () => {
   };
 
   const handleValidate = () => {
-    if (!selectedDepartment) {
-      setSnackbarMessage('Veuillez sélectionner un département.');
+    if (selectedDepartments.length === 0) {
+      setSnackbarMessage('Veuillez sélectionner au moins un département.');
       setOpenSnackbar(true);
     } else if (selectedCommunes.length === 0) {
       setSnackbarMessage('Veuillez sélectionner au moins une commune.');
@@ -142,11 +146,11 @@ const LocalisationImplantation = () => {
   };
 
   const handleReset = () => {
-    setSelectedDepartment(null);
+    setSelectedDepartments([]);
     setSelectedCommunes([]);
     setCommunes([]);
     setCommunesGeoJsonData(null);
-    localStorage.removeItem('selectedDepartment');
+    localStorage.removeItem('selectedDepartments');
     localStorage.removeItem('selectedCommunes');
   };
 
@@ -187,7 +191,7 @@ const LocalisationImplantation = () => {
   };
 
   const onEachFeature = useCallback((feature, layer) => {
-    layer.bindTooltip(feature.properties.nom);
+    layer.bindTooltip(`Commune: ${feature.properties.nom}`);
     layer.on({
       mouseover: () => {
         setHoveredCommune(feature.properties.code);
@@ -216,19 +220,25 @@ const LocalisationImplantation = () => {
   }, []);
 
   const onEachDepartmentFeature = useCallback((feature, layer) => {
-    layer.bindTooltip(feature.properties.nom);
+    layer.bindTooltip(`Département: ${feature.properties.nom}`);
     layer.on({
       click: () => {
         const departmentCode = feature.properties.code;
         const departmentName = feature.properties.nom;
-        const selectedOption = { value: departmentCode, label: `${departmentCode} - ${departmentName}` };
-        handleDepartmentChange(selectedOption);
+        setSelectedDepartments((prevSelectedDepartments) => {
+          const alreadySelected = prevSelectedDepartments.some(dept => dept.value === departmentCode);
+          const newSelection = alreadySelected
+            ? prevSelectedDepartments.filter(dept => dept.value !== departmentCode)
+            : [...prevSelectedDepartments, { value: departmentCode, label: `${departmentCode} - ${departmentName}` }];
+          localStorage.setItem('selectedDepartments', JSON.stringify(newSelection));
+          return newSelection;
+        });
       }
     });
   }, []);
 
   const getDepartmentStyle = (feature) => {
-    return selectedDepartment && selectedDepartment.value === feature.properties.code ? styles.selected : styles.default;
+    return selectedDepartments.some(dept => dept.value === feature.properties.code) ? styles.selected : styles.default;
   };
 
   return (
@@ -304,13 +314,14 @@ const LocalisationImplantation = () => {
             ) : (
               <Select
                 options={departments}
-                value={selectedDepartment}
+                value={selectedDepartments}
                 onChange={handleDepartmentChange}
+                isMulti
                 isSearchable
-                placeholder="Sélectionner un département"
+                placeholder="Sélectionner des départements"
               />
             )}
-            {selectedDepartment && (
+            {selectedDepartments.length > 0 && (
               <>
                 <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
                   Commune(s)
