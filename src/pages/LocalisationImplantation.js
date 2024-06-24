@@ -99,6 +99,7 @@ const LocalisationImplantation = () => {
     }
   }, [selectedDepartments]);
 
+  //
   const handleDepartmentChange = (selectedOptions) => {
     setSelectedDepartments(selectedOptions || []);
     setSelectedCommunes([]);
