@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Grid, FormControl, Skeleton, Snackbar, Button, IconButton, Alert, AlertTitle, Paper } from '@mui/material';
+import { Container, Typography, Box, Grid, FormControl, Snackbar, Button, IconButton, Alert, AlertTitle, Paper } from '@mui/material';
 import Select from 'react-select';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ const SelectionActivite = () => {
   const [selectedDivision, setSelectedDivision] = useState(localStorage.getItem('selectedDivision') ? JSON.parse(localStorage.getItem('selectedDivision')) : null);
   const [selectedGroup, setSelectedGroup] = useState(localStorage.getItem('selectedGroup') ? JSON.parse(localStorage.getItem('selectedGroup')) : null);
   const [selectedClass, setSelectedClass] = useState(localStorage.getItem('selectedClass') ? JSON.parse(localStorage.getItem('selectedClass')) : null);
-  const [selectedSubclass, setSelectedSubclass] = useState(localStorage.getItem('selectedSubclass') ? JSON.parse(localStorage.getItem('selectedSubclass')) : null);
+  const [selectedSubclass, setSelectedSubclass] = useState(localStorage.getItem('selectedSubclass') ? JSON.parse(localStorage.getItem('selectedSubclass')) : []);
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -49,30 +49,27 @@ const SelectionActivite = () => {
     setSelectedDivision(null);
     setSelectedGroup(null);
     setSelectedClass(null);
-    setSelectedSubclass(null);
   };
 
   const handleDivisionChange = (selectedOption) => {
     setSelectedDivision(selectedOption);
     setSelectedGroup(null);
     setSelectedClass(null);
-    setSelectedSubclass(null);
   };
 
   const handleGroupChange = (selectedOption) => {
     setSelectedGroup(selectedOption);
     setSelectedClass(null);
-    setSelectedSubclass(null);
   };
 
   const handleClassChange = (selectedOption) => {
     setSelectedClass(selectedOption);
-    setSelectedSubclass(null);
   };
 
-  const handleSubclassChange = (selectedOption) => {
-    setSelectedSubclass(selectedOption);
-    console.log('Sous-classe sélectionnée:', selectedOption); // Ajouter un log ici pour vérifier
+  const handleSubclassChange = (selectedOptions) => {
+    // Merge with existing selectedSubclass while avoiding duplicates
+    const newSelections = selectedOptions.filter(option => !selectedSubclass.some(subclass => subclass.value === option.value));
+    setSelectedSubclass(prev => [...prev, ...newSelections]);
   };
 
   const handleDeleteActivity = () => {
@@ -80,16 +77,19 @@ const SelectionActivite = () => {
     setSelectedDivision(null);
     setSelectedGroup(null);
     setSelectedClass(null);
-    setSelectedSubclass(null);
+    setSelectedSubclass([]);
   };
 
   const handleNext = () => {
-    if (!selectedSection || !selectedDivision || !selectedGroup || !selectedClass || !selectedSubclass) {
+    if (!selectedSection || !selectedDivision || !selectedGroup || !selectedClass || selectedSubclass.length === 0) {
       setAlertMessage('Veuillez sélectionner toutes les options avant de continuer.');
       setOpenSnackbar(true);
     } else {
       setAlertMessage('');
-      localStorage.setItem('selectedNAF', selectedSubclass.value || '');
+      const selectedSubclassValues = selectedSubclass.map(option => option.value).join(', ');
+      const selectedSubclassLabels = selectedSubclass.map(option => option.label).join(', ');
+      localStorage.setItem('selectedNAF', selectedSubclassValues);
+      localStorage.setItem('selectedNAF1', selectedSubclassLabels);
       navigate('/localisation-implantation');
     }
   };
@@ -104,29 +104,13 @@ const SelectionActivite = () => {
 
   if (loading && firstVisit) {
     return (
-      <Container>
-        <Typography variant="h4" gutterBottom style={{ color: '#286AC7' }}>
-          <Skeleton width="60%" />
-        </Typography>
-        <Box component="form" marginTop={2}>
-          <Grid container spacing={3}>
-            {[...Array(5)].map((_, index) => (
-              <Grid item xs={12} key={index}>
-                <Typography variant="h6" gutterBottom style={{ color: '#286AC7' }}>
-                  <Skeleton width="40%" />
-                </Typography>
-                <FormControl fullWidth>
-                  <Skeleton variant="rectangular" height={56} />
-                </FormControl>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Container>
+      <Typography>Loading</Typography>
     );
   }
 
-  const subclassesOptions = data?.subclasses?.[selectedClass?.value] || [];
+  const subclassesOptions = (data?.subclasses?.[selectedClass?.value] || []).filter(option => 
+    !selectedSubclass.some(subclass => subclass.value === option.value)
+  );
 
   return (
     <Container>
@@ -155,15 +139,15 @@ const SelectionActivite = () => {
         </Box>
       </Box>
 
-      {selectedSubclass && (
+      {selectedSubclass.length > 0 && (
         <Paper elevation={0} style={{ padding: '4px 8px', marginBottom: '16px', width: 'fit-content', border: '1px solid #ccc',  
           borderLeft: '5px solid blue' }}>
           <Box display="flex" alignItems="center">
             <Typography variant="caption" style={{ marginRight: '8px' }}>
-              <span style={{ color: '#286AC7' }}>Vous avez choisi l'activité</span> : {selectedSubclass.label}
+              <span style={{ color: '#286AC7', fontSize: '13px'}}>Vous avez choisi l'activité</span> : {selectedSubclass.map(subclass => subclass.label).join(', ')}
             </Typography>
             <IconButton onClick={handleDeleteActivity} size="small" style={{ color: 'grey' }}>
-              <CloseIcon fontSize="small" style={{ fontSize: '16px',  }} />
+              <CloseIcon fontSize="small" style={{ fontSize: '16px' }} />
             </IconButton>
           </Box>
         </Paper>
@@ -182,7 +166,7 @@ const SelectionActivite = () => {
       />
       <br />
       <Alert variant="outlined" severity="info" >
-        <AlertTitle>Veuillez choisir ci-dessous l'activité souhaitée.</AlertTitle>
+        <AlertTitle >Veuillez choisir ci-dessous l'activité souhaitée.</AlertTitle>
         Les menus se mettront à jour en fonction de votre choix précédent.
       </Alert>
       <Box component="form" marginTop={2}>
@@ -284,11 +268,12 @@ const SelectionActivite = () => {
               </Typography>
               <FormControl fullWidth>
                 <Select
-                  value={selectedSubclass}
+                  value={null}
                   onChange={handleSubclassChange}
                   options={subclassesOptions}
                   placeholder="Sélectionnez une sous-classe"
                   isSearchable
+                  isMulti
                   styles={{
                     control: (base) => ({
                       ...base,
