@@ -7,6 +7,7 @@ import { GetApp as GetAppIcon } from '@mui/icons-material';
 import * as XLSX from 'xlsx';
 import proj4 from 'proj4';
 import { styled } from '@mui/system';
+import axios from 'axios';
 
 // Fix for missing marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -49,69 +50,74 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const mapRef = useRef(null);
 
-    useEffect(() => {
-    const fetchWithThrottle = (requests, delay) => {
-      let index = 0;
-      const results = [];
-      const errors = [];
-
-      const execute = async () => {
-        if (index < requests.length) {
-          try {
-            const result = await requests[index]();
-            results.push(result);
-          } catch (error) {
-            errors.push(error);
-          }
-          index++;
-          setTimeout(execute, delay);
-        } else {
-          // All requests are done
-          const combinedResults = results.flatMap(result => result);
-          setEtablissements(combinedResults);
-        }
-      };
-
-      execute();
-    };
-
-    if (selectedNAF && selectedCommunes.length > 0) {
-      const fetchEtablissements = selectedCommunes.map(commune => {
-        const codeCommune = commune.value;
-        return () => fetch(`https://api.insee.fr/entreprises/sirene/V3.11/siret?q=periode(activitePrincipaleEtablissement%3A${selectedNAF}%20AND%20etatAdministratifEtablissement%3AA)%20AND%20codeCommuneEtablissement%3A${codeCommune}`, {
-          headers: {
+  useEffect(() => {
+    const fetchData = async () => {
+      if (selectedNAF && selectedCommunes.length > 0) {
+        try {
+          console.log('Type of selectedNAF:', typeof selectedNAF);
+          console.log('Value of selectedNAF:', selectedNAF);
+          console.log('Selected Communes:', selectedCommunes);
+          
+          // Ensure selectedNAF is a string
+          const nafString = Array.isArray(selectedNAF) ? selectedNAF.join(',') : selectedNAF.toString();
+          
+          const nafCodes = nafString.split(',').map(code => `activitePrincipaleEtablissement:${code.trim()}`).join(' OR ');
+          const communeCodes = selectedCommunes.map(commune => `codeCommuneEtablissement:${commune.value.trim()}`).join(' OR ');
+  
+          const query = `periode(${nafCodes} AND etatAdministratifEtablissement:A) AND (${communeCodes})`;
+          const encodedQuery = encodeURIComponent(query);
+          
+          const url = `https://api.insee.fr/entreprises/sirene/V3.11/siret?q=${encodedQuery}`;
+          console.log('Constructed URL:', url);
+  
+          const headers = {
             'Accept': 'application/json',
             'Authorization': 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
-          }
-        }).then(response => response.json());
-      });
-
-      const fetchCommuneBoundaries = selectedCommunes.map(commune => {
-        const codeCommune = commune.value;
-        return fetch(`https://geo.api.gouv.fr/communes/${codeCommune}?geometry=contour&format=geojson`)
-          .then(response => response.json());
-      });
-
-      // Throttle the requests
-      fetchWithThrottle(fetchEtablissements, 1000); // Adjust the delay as needed
-
-      Promise.all(fetchCommuneBoundaries)
-        .then(results => {
+          };
+          console.log('Headers:', headers);
+  
+          const response = await axios.get(url, { headers });
+          const data = response.data;
+          console.log('Fetched data:', data);
+  
+          const allEtablissements = new Set();
+          (data.etablissements || []).forEach(etablissement => {
+            allEtablissements.add(JSON.stringify(etablissement));
+          });
+  
+          setEtablissements(Array.from(allEtablissements).map(item => JSON.parse(item)));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+  
+        try {
+          const fetchCommuneBoundaries = selectedCommunes.map(commune => {
+            const codeCommune = commune.value;
+            return fetch(`https://geo.api.gouv.fr/communes/${codeCommune}?geometry=contour&format=geojson`)
+              .then(response => response.json());
+          });
+  
+          const results = await Promise.all(fetchCommuneBoundaries);
           const combinedBoundaries = {
             type: "FeatureCollection",
             features: results.flatMap(data => data.features || [data])
           };
           setCommuneBoundaries(combinedBoundaries);
-
+  
           if (mapRef.current) {
             const map = mapRef.current;
             const bounds = L.geoJSON(combinedBoundaries).getBounds();
             map.fitBounds(bounds);
           }
-        })
-        .catch(error => console.error('Error fetching commune boundaries:', error));
-    }
+        } catch (error) {
+          console.error('Error fetching commune boundaries:', error);
+        }
+      }
+    };
+  
+    fetchData();
   }, [selectedNAF, selectedCommunes]);
+  
   useImperativeHandle(ref, () => ({
     getEntreprisesData: () => {
       return etablissements.map(etablissement => transformData(etablissement));
@@ -247,7 +253,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     color: 'white',
     marginBottom: '20px'
   }));
-
+  
   return (
     <Box height="100%" style={{ overflowY: 'auto' }}>
       <HeaderContainer>
@@ -313,7 +319,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
                 <Marker key={index} position={transformedData.coords}>
                   <Popup>
                     <strong style={{ color: 'blue' }}>Siret: </strong> {transformedData.siret}<br />
-                    <strong style={{ color: 'blue' }}>Nom Etablissement: </strong> {transformedData.denomination}<br />
+                    <strong style={{ color: 'blue' }}>Dénomination: </strong> {transformedData.denomination}<br />
                     <strong style={{ color: 'blue' }}>Adresse: </strong> {transformedData.adresse}<br />
                     <strong style={{ color: 'blue' }}>Commune: </strong> {transformedData.commune}<br />
                     <strong style={{ color: 'blue' }}>Effectif: </strong> {transformedData.tranchEffectifEtablissement}<br />
@@ -329,7 +335,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
           <TableHead style={{ backgroundColor: 'grey' }}>
             <TableRow>
               <TableCell style={{ color: 'white' }}>Siret</TableCell>
-              <TableCell style={{ color: 'white' }}>Nom</TableCell>
+              <TableCell style={{ color: 'white' }}>Dénomination</TableCell>
               <TableCell style={{ color: 'white' }}>Adresse</TableCell>
               <TableCell style={{ color: 'white' }}>Commune</TableCell>
               <TableCell style={{ color: 'white' }}>Tranche Effectifs</TableCell>
@@ -360,7 +366,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Lignes par page"
+          labelRowsPerPage="Lignes par page:"
         />
       </TableContainer>
     </Box>
