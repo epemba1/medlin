@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Grid, FormControl, Snackbar, Button, IconButton, Alert, AlertTitle, Paper } from '@mui/material';
+import { Container, Typography, Box, Grid, FormControl, Skeleton, Snackbar, Button, IconButton, Alert, AlertTitle, Paper } from '@mui/material';
 import Select from 'react-select';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -9,87 +9,47 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 const SelectionActivite = () => {
   const [data, setData] = useState(null);
-  const [selectedSection, setSelectedSection] = useState(localStorage.getItem('selectedSection') ? JSON.parse(localStorage.getItem('selectedSection')) : null);
-  const [selectedDivision, setSelectedDivision] = useState(localStorage.getItem('selectedDivision') ? JSON.parse(localStorage.getItem('selectedDivision')) : null);
-  const [selectedGroup, setSelectedGroup] = useState(localStorage.getItem('selectedGroup') ? JSON.parse(localStorage.getItem('selectedGroup')) : null);
-  const [selectedClass, setSelectedClass] = useState(localStorage.getItem('selectedClass') ? JSON.parse(localStorage.getItem('selectedClass')) : null);
-  const [selectedSubclass, setSelectedSubclass] = useState(localStorage.getItem('selectedSubclass') ? JSON.parse(localStorage.getItem('selectedSubclass')) : []);
+  const [selectedSubclasses, setSelectedSubclasses] = useState(localStorage.getItem('selectedSubclasses') ? JSON.parse(localStorage.getItem('selectedSubclasses')) : []);
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [firstVisit, setFirstVisit] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => {
-      axios.get('/nafData.json')
-        .then(response => {
-          setData(response.data);
-          setLoading(false);
-          setFirstVisit(false);
-        })
-        .catch(error => {
-          setLoading(false);
-          setAlertMessage('Erreur de chargement des données');
-          setOpenSnackbar(true);
-        });
-    }, 200);
+    axios.get('/nafData.json')
+      .then(response => {
+        setData(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
+        setAlertMessage('Erreur de chargement des données');
+        setOpenSnackbar(true);
+      });
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('selectedSection', JSON.stringify(selectedSection));
-    localStorage.setItem('selectedDivision', JSON.stringify(selectedDivision));
-    localStorage.setItem('selectedGroup', JSON.stringify(selectedGroup));
-    localStorage.setItem('selectedClass', JSON.stringify(selectedClass));
-    localStorage.setItem('selectedSubclass', JSON.stringify(selectedSubclass));
-  }, [selectedSection, selectedDivision, selectedGroup, selectedClass, selectedSubclass]);
-
-  const handleSectionChange = (selectedOption) => {
-    setSelectedSection(selectedOption);
-    setSelectedDivision(null);
-    setSelectedGroup(null);
-    setSelectedClass(null);
-  };
-
-  const handleDivisionChange = (selectedOption) => {
-    setSelectedDivision(selectedOption);
-    setSelectedGroup(null);
-    setSelectedClass(null);
-  };
-
-  const handleGroupChange = (selectedOption) => {
-    setSelectedGroup(selectedOption);
-    setSelectedClass(null);
-  };
-
-  const handleClassChange = (selectedOption) => {
-    setSelectedClass(selectedOption);
-  };
+    localStorage.setItem('selectedSubclasses', JSON.stringify(selectedSubclasses));
+  }, [selectedSubclasses]);
 
   const handleSubclassChange = (selectedOptions) => {
-    // Merge with existing selectedSubclass while avoiding duplicates
-    const newSelections = selectedOptions.filter(option => !selectedSubclass.some(subclass => subclass.value === option.value));
-    setSelectedSubclass(prev => [...prev, ...newSelections]);
+    setSelectedSubclasses(selectedOptions);
   };
 
   const handleDeleteActivity = () => {
-    setSelectedSection(null);
-    setSelectedDivision(null);
-    setSelectedGroup(null);
-    setSelectedClass(null);
-    setSelectedSubclass([]);
+    setSelectedSubclasses([]);
   };
 
   const handleNext = () => {
-    if (!selectedSection || !selectedDivision || !selectedGroup || !selectedClass || selectedSubclass.length === 0) {
-      setAlertMessage('Veuillez sélectionner toutes les options avant de continuer.');
+    if (selectedSubclasses.length === 0) {
+      setAlertMessage('Veuillez sélectionner au moins une sous-classe avant de continuer.');
       setOpenSnackbar(true);
     } else {
       setAlertMessage('');
-      const selectedSubclassValues = selectedSubclass.map(option => option.value).join(', ');
-      const selectedSubclassLabels = selectedSubclass.map(option => option.label).join(', ');
-      localStorage.setItem('selectedNAF', selectedSubclassValues);
-      localStorage.setItem('selectedNAF1', selectedSubclassLabels);
+      const selectedNAFValues = selectedSubclasses.map(subclass => subclass.value).join(',');
+      const selectedNAFLabels = selectedSubclasses.map(subclass => subclass.label).join(',');
+      localStorage.setItem('selectedNAF', selectedNAFValues);
+      localStorage.setItem('selectedNAF1', selectedNAFLabels);
       navigate('/localisation-implantation');
     }
   };
@@ -102,21 +62,37 @@ const SelectionActivite = () => {
     setOpenSnackbar(false);
   };
 
-  if (loading && firstVisit) {
+  if (loading) {
     return (
-      <Typography>Loading</Typography>
+      <Container>
+        <Typography variant="h4" gutterBottom style={{ color: '#286AC7' }}>
+          <Skeleton width="60%" />
+        </Typography>
+        <Box component="form" marginTop={2}>
+          <Grid container spacing={3}>
+            {[...Array(5)].map((_, index) => (
+              <Grid item xs={12} key={index}>
+                <Typography variant="h6" gutterBottom style={{ color: '#286AC7' }}>
+                  <Skeleton width="40%" />
+                </Typography>
+                <FormControl fullWidth>
+                  <Skeleton variant="rectangular" height={56} />
+                </FormControl>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </Container>
     );
   }
 
-  const subclassesOptions = (data?.subclasses?.[selectedClass?.value] || []).filter(option => 
-    !selectedSubclass.some(subclass => subclass.value === option.value)
-  );
+  const subclassesOptions = Object.values(data?.subclasses || {}).flat();
 
   return (
     <Container>
       <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
         <Typography variant="h4" gutterBottom>
-          Sélection de l'Activité
+          Sélection de l'activité
         </Typography>
         <Box display="flex" alignItems="center">
           <Button
@@ -139,12 +115,11 @@ const SelectionActivite = () => {
         </Box>
       </Box>
 
-      {selectedSubclass.length > 0 && (
-        <Paper elevation={0} style={{ padding: '4px 8px', marginBottom: '16px', width: 'fit-content', border: '1px solid #ccc',  
-          borderLeft: '5px solid blue' }}>
+      {selectedSubclasses.length > 0 && (
+        <Paper elevation={0} style={{ padding: '4px 8px', marginBottom: '16px', width: 'fit-content', border: '1px solid #ccc', borderLeft: '5px solid blue' }}>
           <Box display="flex" alignItems="center">
             <Typography variant="caption" style={{ marginRight: '8px' }}>
-              <span style={{ color: '#286AC7', fontSize: '13px'}}>Vous avez choisi l'activité</span> : {selectedSubclass.map(subclass => subclass.label).join(', ')}
+              <span style={{ color: '#286AC7', fontSize: '14px'}}>Vous avez choisi l'activité</span> : {selectedSubclasses.map(subclass => subclass.label).join(', ')}
             </Typography>
             <IconButton onClick={handleDeleteActivity} size="small" style={{ color: 'grey' }}>
               <CloseIcon fontSize="small" style={{ fontSize: '16px' }} />
@@ -165,23 +140,29 @@ const SelectionActivite = () => {
         }
       />
       <br />
-      <Alert variant="outlined" severity="info" >
-        <AlertTitle >Veuillez choisir ci-dessous l'activité souhaitée.</AlertTitle>
-        Les menus se mettront à jour en fonction de votre choix précédent.
+      <Alert variant="outlined" severity="info">
+        <AlertTitle>Veuillez choisir ci-dessous l'activité souhaitée.</AlertTitle>
+        La <span style={{ color: '#286AC7' }}>Nomenclature d'Activités Française (NAF)</span> est une classification officielle utilisée pour répertorier les activités économiques en France. 
+        Principalement utilisée à des fins statistiques, elle permet d'organiser et d'analyser l'information économique et sociale. 
+        La NAF est essentielle pour l'élaboration de statistiques nationales et européennes. 
+        Pour une compréhension approfondie de cette nomenclature et de ses applications, veuillez consulter ce 
+        <a href="https://www.insee.fr/fr/metadonnees/nafr2" target="_blank" rel="noopener noreferrer" style={{ color: '#286AC7' }}> lien</a>.
       </Alert>
+
       <Box component="form" marginTop={2}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom style={{ color: '#286AC7' }}>
-              Section
+              Secteurs d'activité
             </Typography>
             <FormControl fullWidth>
               <Select
-                value={selectedSection}
-                onChange={handleSectionChange}
-                options={data.sections}
-                placeholder="Sélectionnez une section"
+                value={selectedSubclasses}
+                onChange={handleSubclassChange}
+                options={subclassesOptions}
+                placeholder="code ou libellé"
                 isSearchable
+                isMulti
                 styles={{
                   control: (base) => ({
                     ...base,
@@ -191,100 +172,18 @@ const SelectionActivite = () => {
               />
             </FormControl>
           </Grid>
-
-          {selectedSection && (
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom style={{ color: '#286AC7' }}>
-                Division
-              </Typography>
-              <FormControl fullWidth>
-                <Select
-                  value={selectedDivision}
-                  onChange={handleDivisionChange}
-                  options={data.divisions[selectedSection.value] || []}
-                  placeholder="Sélectionnez une division"
-                  isSearchable
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      minHeight: '40px',
-                    }),
-                  }}
-                />
-              </FormControl>
-            </Grid>
-          )}
-
-          {selectedDivision && (
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom style={{ color: '#286AC7' }}>
-                Groupe
-              </Typography>
-              <FormControl fullWidth>
-                <Select
-                  value={selectedGroup}
-                  onChange={handleGroupChange}
-                  options={data.groups[selectedDivision.value] || []}
-                  placeholder="Sélectionnez un groupe"
-                  isSearchable
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      minHeight: '40px',
-                    }),
-                  }}
-                />
-              </FormControl>
-            </Grid>
-          )}
-
-          {selectedGroup && (
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom style={{ color: '#286AC7' }}>
-                Classe
-              </Typography>
-              <FormControl fullWidth>
-                <Select
-                  value={selectedClass}
-                  onChange={handleClassChange}
-                  options={data.classes[selectedGroup.value] || []}
-                  placeholder="Sélectionnez une classe"
-                  isSearchable
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      minHeight: '40px',
-                    }),
-                  }}
-                />
-              </FormControl>
-            </Grid>
-          )}
-
-          {selectedClass && (
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom style={{ color: '#286AC7' }}>
-                Sous-classe
-              </Typography>
-              <FormControl fullWidth>
-                <Select
-                  value={null}
-                  onChange={handleSubclassChange}
-                  options={subclassesOptions}
-                  placeholder="Sélectionnez une sous-classe"
-                  isSearchable
-                  isMulti
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      minHeight: '40px',
-                    }),
-                  }}
-                />
-              </FormControl>
-            </Grid>
-          )}
         </Grid>
+        <Box display="flex" justifyContent="flex-end" marginTop={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleNext}
+            
+            style={{ borderRadius: '8px', textTransform: 'none' }}
+          >
+            Valider
+          </Button>
+        </Box>
       </Box>
     </Container>
   );
