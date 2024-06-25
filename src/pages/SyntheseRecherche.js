@@ -17,18 +17,15 @@ const SyntheseRecherche = () => {
 
   useEffect(() => {
     const naf = localStorage.getItem('selectedNAF');
+    const naf1 = localStorage.getItem('selectedNAF1');
     const communes = JSON.parse(localStorage.getItem('selectedCommunes')) || [];
     const communeNames = JSON.parse(localStorage.getItem('selectedCommuneNames')) || [];
     console.log('Loaded communes from localStorage:', communes);
     console.log('Loaded commune names from localStorage:', communeNames);
-    setSelectedNAF(naf || '');
-    setSelectedCommunes(communes || []);
-    setSelectedCommuneNames(communeNames || []);
-  }, []);
-
-  useEffect(() => {
-    const naf1 = localStorage.getItem('selectedNAF1');
-    setSelectedNAF1(naf1 || '');
+    setSelectedNAF(naf ? naf.split(',') : []);
+    setSelectedNAF1(naf1 ? naf1.split(',') : []);
+    setSelectedCommunes(communes);
+    setSelectedCommuneNames(communeNames);
   }, []);
 
   const handleTabChange = (event, newValue) => {
@@ -72,12 +69,13 @@ const SyntheseRecherche = () => {
       </Typography>
       <Paper elevation={1} style={{ padding: '16px', marginBottom: '16px' }}>
         <Typography variant="h6" gutterBottom>Activité choisie :</Typography>
-        <Typography variant="body1">{selectedNAF1 || 'Aucune activité choisie'}</Typography>
+        <Typography variant="body1">{selectedNAF1.length > 0 ? selectedNAF1.join(', ') : 'Aucune activité choisie'}</Typography>
       </Paper>
       <Paper elevation={1} style={{ padding: '16px', marginBottom: '16px' }}>
         <Typography variant="h6" gutterBottom>Communes choisies :</Typography>
         <Typography variant="body1">
-        {selectedCommuneNames.length > 0 ? selectedCommuneNames.join(', ') : 'Aucune commune choisie'}        </Typography>
+          {selectedCommuneNames.length > 0 ? selectedCommuneNames.join(' - ') : 'Aucune commune choisie'}
+        </Typography>
       </Paper>
 
       <Box marginTop={10} position="relative">
