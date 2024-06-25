@@ -40,7 +40,6 @@ const SelectionActivite = () => {
     setSelectedSubclasses([]);
   };
 
-  //Transfer the selected NAF and navigate next
   const handleNext = () => {
     if (selectedSubclasses.length === 0) {
       setAlertMessage('Veuillez sélectionner au moins une sous-classe avant de continuer.');
@@ -117,13 +116,13 @@ const SelectionActivite = () => {
       </Box>
 
       {selectedSubclasses.length > 0 && (
-        <Paper elevation={0} style={{ padding: '4px 8px', marginBottom: '16px', width: 'fit-content', border: '1px solid #ccc', borderLeft: '5px solid blue' }}>
-          <Box display="flex" alignItems="center">
-            <Typography variant="caption" style={{ marginRight: '8px' }}>
-              <span style={{ color: '#286AC7', fontSize: '14px'}}>Vous avez choisi l'activité</span> : {selectedSubclasses.map(subclass => subclass.label).join(', ')}
+        <Paper elevation={3} style={{ padding: '10px 16px', marginBottom: '16px', borderRadius: '8px', borderLeft: '5px solid #286AC7' }}>
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Typography variant="body1" style={{ fontWeight: 500 }}>
+              <span style={{ color: '#286AC7' }}>Vous avez choisi l'activité :</span> {selectedSubclasses.map(subclass => subclass.label).join(', ')}
             </Typography>
             <IconButton onClick={handleDeleteActivity} size="small" style={{ color: 'grey' }}>
-              <CloseIcon fontSize="small" style={{ fontSize: '16px' }} />
+              <CloseIcon fontSize="small" />
             </IconButton>
           </Box>
         </Paper>
@@ -141,13 +140,18 @@ const SelectionActivite = () => {
         }
       />
       <br />
-      <Alert variant="outlined" severity="info">
-        <AlertTitle>Veuillez choisir ci-dessous l'activité souhaitée.</AlertTitle>
-        La <span style={{ color: '#286AC7' }}>Nomenclature d'Activités Française (NAF)</span> est une classification officielle utilisée pour répertorier les activités économiques en France. 
-        Principalement utilisée à des fins statistiques, elle permet d'organiser et d'analyser l'information économique et sociale. 
-        La NAF est essentielle pour l'élaboration de statistiques nationales et européennes. 
-        Pour une compréhension approfondie de cette nomenclature et de ses applications, veuillez consulter ce 
-        <a href="https://www.insee.fr/fr/metadonnees/nafr2" target="_blank" rel="noopener noreferrer" style={{ color: '#286AC7' }}> lien</a>.
+      <Alert variant="outlined" severity="info" style={{ borderRadius: '8px' }}>
+        <AlertTitle>Nomenclature d'activités française (NAF)</AlertTitle>
+        <Typography variant="body2" gutterBottom>
+          <span style={{ color: '#286AC7' }}>La NAF, nomenclature d'activités française,</span> est une nomenclature des activités économiques productives, principalement élaborée pour faciliter l'organisation de l'information économique et sociale.
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          Principalement utilisée à des fins statistiques, elle permet d'organiser et d'analyser l'information économique et sociale.
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          Elle est essentielle pour l'élaboration de statistiques nationales et européennes. Pour une compréhension approfondie <a href="https://www.insee.fr/fr/metadonnees/nafr2" target="_blank" rel="noopener noreferrer" style={{ color: '#286AC7' }}>de cette nomenclature et de ses applications.
+           </a>
+        </Typography>
       </Alert>
 
       <Box component="form" marginTop={2}>
@@ -179,7 +183,7 @@ const SelectionActivite = () => {
             variant="contained"
             color="primary"
             onClick={handleNext}
-            
+            endIcon={<NavigateNextIcon />}
             style={{ borderRadius: '8px', textTransform: 'none' }}
           >
             Valider
