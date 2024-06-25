@@ -40,6 +40,7 @@ const SelectionActivite = () => {
     setSelectedSubclasses([]);
   };
 
+  //Transfer the selected NAF and navigate next
   const handleNext = () => {
     if (selectedSubclasses.length === 0) {
       setAlertMessage('Veuillez sélectionner au moins une sous-classe avant de continuer.');
