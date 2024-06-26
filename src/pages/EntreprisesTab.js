@@ -7,7 +7,6 @@ import { GetApp as GetAppIcon } from '@mui/icons-material';
 import * as XLSX from 'xlsx';
 import proj4 from 'proj4';
 import { styled } from '@mui/system';
-import axios from 'axios';
 
 // Fix for missing marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -51,73 +50,48 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (selectedNAF && selectedCommunes.length > 0) {
-        try {
-          console.log('Type of selectedNAF:', typeof selectedNAF);
-          console.log('Value of selectedNAF:', selectedNAF);
-          console.log('Selected Communes:', selectedCommunes);
-          
-          // Ensure selectedNAF is a string
-          const nafString = Array.isArray(selectedNAF) ? selectedNAF.join(',') : selectedNAF.toString();
-          
-          const nafCodes = nafString.split(',').map(code => `activitePrincipaleEtablissement:${code.trim()}`).join(' OR ');
-          const communeCodes = selectedCommunes.map(commune => `codeCommuneEtablissement:${commune.value.trim()}`).join(' OR ');
-  
-          const query = `periode(${nafCodes} AND etatAdministratifEtablissement:A) AND (${communeCodes})`;
-          const encodedQuery = encodeURIComponent(query);
-          
-          const url = `https://api.insee.fr/entreprises/sirene/V3.11/siret?q=${encodedQuery}`;
-          console.log('Constructed URL:', url);
-  
-          const headers = {
+    if (selectedNAF && selectedCommunes.length > 0) {
+      const fetchEtablissements = selectedCommunes.map(commune => {
+        const codeCommune = commune.value;
+        return fetch(`https://api.insee.fr/entreprises/sirene/V3.11/siret?q=periode(activitePrincipaleEtablissement%3A${selectedNAF}%20AND%20etatAdministratifEtablissement%3AA%20AND%20-dateFin%3A*)%20AND%20codeCommuneEtablissement%3A${codeCommune}`, {
+          headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
-          };
-          console.log('Headers:', headers);
-  
-          const response = await axios.get(url, { headers });
-          const data = response.data;
-          console.log('Fetched data:', data);
-  
-          const allEtablissements = new Set();
-          (data.etablissements || []).forEach(etablissement => {
-            allEtablissements.add(JSON.stringify(etablissement));
-          });
-  
-          setEtablissements(Array.from(allEtablissements).map(item => JSON.parse(item)));
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-  
-        try {
-          const fetchCommuneBoundaries = selectedCommunes.map(commune => {
-            const codeCommune = commune.value;
-            return fetch(`https://geo.api.gouv.fr/communes/${codeCommune}?geometry=contour&format=geojson`)
-              .then(response => response.json());
-          });
-  
-          const results = await Promise.all(fetchCommuneBoundaries);
+          }
+        }).then(response => response.json());
+      });
+
+      const fetchCommuneBoundaries = selectedCommunes.map(commune => {
+        const codeCommune = commune.value;
+        return fetch(`https://geo.api.gouv.fr/communes/${codeCommune}?geometry=contour&format=geojson`)
+          .then(response => response.json());
+      });
+
+      Promise.all(fetchEtablissements)
+        .then(results => {
+          const allEtablissements = results.flatMap(data => data.etablissements || []);
+          setEtablissements(allEtablissements);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+      Promise.all(fetchCommuneBoundaries)
+        .then(results => {
           const combinedBoundaries = {
             type: "FeatureCollection",
             features: results.flatMap(data => data.features || [data])
           };
           setCommuneBoundaries(combinedBoundaries);
-  
+
           if (mapRef.current) {
             const map = mapRef.current;
             const bounds = L.geoJSON(combinedBoundaries).getBounds();
             map.fitBounds(bounds);
           }
-        } catch (error) {
-          console.error('Error fetching commune boundaries:', error);
-        }
-      }
-    };
-  
-    fetchData();
+        })
+        .catch(error => console.error('Error fetching commune boundaries:', error));
+    }
   }, [selectedNAF, selectedCommunes]);
-  
+
   useImperativeHandle(ref, () => ({
     getEntreprisesData: () => {
       return etablissements.map(etablissement => transformData(etablissement));
@@ -130,7 +104,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     }
     try {
       const [lng, lat] = proj4(lambert93, wgs84, [x, y]);
-      console.log('Converted coordinates:', { x, y, lat, lng });
+      //console.log('Converted coordinates:', { x, y, lat, lng });
       return [lat, lng];
     } catch (error) {
       console.error('Error converting coordinates:', error);
@@ -148,89 +122,104 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     const y = parseFloat(replaceNDWithUndefined(adresseEtablissement.coordonneeLambertOrdonneeEtablissement));
     const coords = convertLambertToLatLng(x, y);
 
+    
+
     const denominationUsuelle = replaceNDWithUndefined(periodesEtablissement[0]?.denominationUsuelleEtablissement);
     const denominationLegale = replaceNDWithUndefined(uniteLegale?.denominationUniteLegale);
-    const prenom = replaceNDWithUndefined(uniteLegale?.prenomUniteLegale);
+    const sigleLegale = replaceNDWithUndefined(uniteLegale?.sigleUniteLegale);
+    const denominationUsuelle1 = replaceNDWithUndefined(uniteLegale?.denominationUsuelle1UniteLegale);
+    const denominationUsuelle2 = replaceNDWithUndefined(uniteLegale?.denominationUsuelle2UniteLegale);
+    const denominationUsuelle3 = replaceNDWithUndefined(uniteLegale?.denominationUsuelle3UniteLegale);
+    const prenom = replaceNDWithUndefined(uniteLegale?.prenom1UniteLegale);
     const nom = replaceNDWithUndefined(uniteLegale?.nomUniteLegale);
 
     let denomination = 'Indisponible';
 
     if (denominationUsuelle && denominationUsuelle !== "Non défini") {
-      denomination = denominationUsuelle;
+        denomination = denominationUsuelle;
     } else if (denominationLegale) {
-      denomination = denominationLegale;
+        denomination = denominationLegale;
+    } else if (denominationUsuelle1) {
+        denomination = denominationUsuelle1;
+    } else if (denominationUsuelle2) {
+        denomination = denominationUsuelle2;
+    } else if (denominationUsuelle3) {
+        denomination = denominationUsuelle3;
     } else if (prenom && nom) {
-      denomination = `${prenom} ${nom}`;
+        denomination = `${prenom.toLowerCase()} ${nom}`;
+    } else if (sigleLegale) {
+        denomination = sigleLegale;
     }
 
     return {
-      siret: etablissement.siret,
-      denomination: denomination,
-      adresse: `${replaceNDWithUndefined(adresseEtablissement.numeroVoieEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.typeVoieEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.libelleVoieEtablissement) || ''} `,
-      commune: `${replaceNDWithUndefined(adresseEtablissement.codeCommuneEtablissement)}, ${replaceNDWithUndefined(adresseEtablissement.libelleCommuneEtablissement)}`,
-      tranchEffectifEtablissement: tranchEffectifsEtablissement[replaceNDWithUndefined(uniteLegale?.trancheEffectifsUniteLegale)] || 'Non renseigné',
-      categorieEntreprise: replaceNDWithUndefined(uniteLegale?.categorieEntreprise) || 'Non défini',
-      coords: coords
+        siret: etablissement.siret,
+        denomination: denomination,
+        adresse: `${replaceNDWithUndefined(adresseEtablissement.numeroVoieEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.typeVoieEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.libelleVoieEtablissement) || ''} `,
+        commune: `${replaceNDWithUndefined(adresseEtablissement.codeCommuneEtablissement)}, ${replaceNDWithUndefined(adresseEtablissement.libelleCommuneEtablissement)}`,
+        tranchEffectifEtablissement: tranchEffectifsEtablissement[replaceNDWithUndefined(uniteLegale?.trancheEffectifsUniteLegale)] || 'Non renseigné',
+        categorieEntreprise: replaceNDWithUndefined(uniteLegale?.categorieEntreprise) || 'Non défini',
+        activitePrincipale: replaceNDWithUndefined(periodesEtablissement[0]?.activitePrincipaleEtablissement),
+        coords: coords
     };
+};
+
+const handleDownload = () => {
+  const data = etablissements.map(transformData).map(({ coords, ...rest }) => rest);
+  const worksheet = XLSX.utils.json_to_sheet(data);
+
+  // Create workbook and add the worksheet
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Entreprises');
+
+  // Define styles
+  const headerStyle = { 
+    font: { bold: true, sz: 14, color: { rgb: "000000" } },
+    alignment: { horizontal: 'center', vertical: 'center' },
+    fill: { fgColor: { rgb: "FFFFF0" } }, // Light yellow background
+    padding: { top: 10 } // Add padding on top
   };
+  const rowStyle = { alignment: { vertical: 'center' } };
 
-  const handleDownload = () => {
-    const data = etablissements.map(transformData);
-    const worksheet = XLSX.utils.json_to_sheet(data);
+  // Apply styles to the header and capitalize first letter
+  const range = XLSX.utils.decode_range(worksheet['!ref']);
 
-    // Create workbook and add the worksheet
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Entreprises');
+  for (let C = range.s.c; C <= range.e.c; ++C) {
+    const address = XLSX.utils.encode_col(C) + '1';
+    if (!worksheet[address]) continue;
+    
+    // Capitalize first letter of the header
+    const headerText = worksheet[address].v;
+    worksheet[address].v = headerText.charAt(0).toUpperCase() + headerText.slice(1);
 
-    // Define styles
-    const headerStyle = { 
-        font: { bold: true, sz: 14, color: { rgb: "000000" } },
-        alignment: { horizontal: 'center', vertical: 'center' },
-        fill: { fgColor: { rgb: "FFFFF0" } }, // Light yellow background
-        padding: { top: 10 } // Add padding on top
-    };
-    const rowStyle = { alignment: { vertical: 'center' } };
+    if (!worksheet[address].s) worksheet[address].s = {};
+    worksheet[address].s = { ...worksheet[address].s, ...headerStyle };
+  }
 
-    // Apply styles to the header and capitalize first letter
-    const range = XLSX.utils.decode_range(worksheet['!ref']);
-
+  // Apply styles to the rows and set row heights
+  for (let R = range.s.r + 1; R <= range.e.r; ++R) { // Start from second row
     for (let C = range.s.c; C <= range.e.c; ++C) {
-        const address = XLSX.utils.encode_col(C) + '1';
-        if (!worksheet[address]) continue;
-        
-        // Capitalize first letter of the header
-        const headerText = worksheet[address].v;
-        worksheet[address].v = headerText.charAt(0).toUpperCase() + headerText.slice(1);
-
-        if (!worksheet[address].s) worksheet[address].s = {};
-        worksheet[address].s = { ...worksheet[address].s, ...headerStyle };
+      const cell_address = XLSX.utils.encode_cell({ c: C, r: R });
+      if (!worksheet[cell_address]) continue;
+      if (!worksheet[cell_address].s) worksheet[cell_address].s = {};
+      worksheet[cell_address].s = { ...worksheet[cell_address].s, ...rowStyle };
     }
-
-    // Apply styles to the rows and set row heights
-    for (let R = range.s.r + 1; R <= range.e.r; ++R) { // Start from second row
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-            const cell_address = XLSX.utils.encode_cell({ c: C, r: R });
-            if (!worksheet[cell_address]) continue;
-            if (!worksheet[cell_address].s) worksheet[cell_address].s = {};
-            worksheet[cell_address].s = { ...worksheet[cell_address].s, ...rowStyle };
-        }
-        if (!worksheet['!rows']) worksheet['!rows'] = [];
-        worksheet['!rows'][R] = { hpx: 20 }; // Set row height to 20 pixels
-    }
-
-    // Set header row height
     if (!worksheet['!rows']) worksheet['!rows'] = [];
-    worksheet['!rows'][0] = { hpx: 30 }; // Set header row height to 40 pixels
+    worksheet['!rows'][R] = { hpx: 20 }; // Set row height to 20 pixels
+  }
 
-    // Adjust column widths
-    const colWidths = [];
-    for (let C = range.s.c; C <= range.e.c; ++C) {
-        colWidths.push({ wpx: 150 }); // Set column width to 150 pixels
-    }
-    worksheet['!cols'] = colWidths;
+  // Set header row height
+  if (!worksheet['!rows']) worksheet['!rows'] = [];
+  worksheet['!rows'][0] = { hpx: 30 }; // Set header row height to 40 pixels
 
-    // Write the workbook
-    XLSX.writeFile(workbook, 'Entreprises.xlsx');
+  // Adjust column widths
+  const colWidths = [];
+  for (let C = range.s.c; C <= range.e.c; ++C) {
+    colWidths.push({ wpx: 150 }); // Set column width to 150 pixels
+  }
+  worksheet['!cols'] = colWidths;
+
+  // Write the workbook
+  XLSX.writeFile(workbook, 'Entreprises.xlsx');
 };
 
 
@@ -253,7 +242,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     color: 'white',
     marginBottom: '20px'
   }));
-  
+
   return (
     <Box height="100%" style={{ overflowY: 'auto' }}>
       <HeaderContainer>
@@ -324,6 +313,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
                     <strong style={{ color: 'blue' }}>Commune: </strong> {transformedData.commune}<br />
                     <strong style={{ color: 'blue' }}>Effectif: </strong> {transformedData.tranchEffectifEtablissement}<br />
                     <strong style={{ color: 'blue' }}>Catégorie: </strong> {transformedData.categorieEntreprise}<br />
+                    <strong style={{ color: 'blue' }}>APE: </strong> {transformedData.activitePrincipale}<br />
                   </Popup>
                 </Marker>
               );
@@ -340,6 +330,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
               <TableCell style={{ color: 'white' }}>Commune</TableCell>
               <TableCell style={{ color: 'white' }}>Tranche Effectifs</TableCell>
               <TableCell style={{ color: 'white' }}>Catégorie</TableCell>
+              <TableCell style={{ color: 'white' }}>Activité principale</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -353,6 +344,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
                   <TableCell>{transformedData.commune}</TableCell>
                   <TableCell>{transformedData.tranchEffectifEtablissement}</TableCell>
                   <TableCell>{transformedData.categorieEntreprise}</TableCell>
+                  <TableCell>{transformedData.activitePrincipale}</TableCell>
                 </TableRow>
               );
             })}
