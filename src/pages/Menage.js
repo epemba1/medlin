@@ -133,12 +133,12 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
 
   const tableData = transformDataForTable(data);
 
-  // Move the last row to the second index
+  // Move the last row, to the second index
   if (tableData.length > 1) {
     const lastRow = tableData.pop();
     tableData.splice(0, 0, lastRow);
   }
-
+  
   const chartData = tableData.filter(row => row.category !== 'Ensemble');
 
   console.log('Chart data:', chartData); // Debugging chart data
