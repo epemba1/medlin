@@ -122,7 +122,7 @@ const Menage = forwardRef(({ communeCodes }, ref) => {
       }
     });
 
-    console.log('Transformed data for table:', categoryData); // Debugging transformed data
+    console.log('Transformed data for table:', categoryData); // Debugging data transformed
 
     return Object.entries(categoryData).map(([csCode, values]) => ({
       category: categoryLabels[csCode],
