@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Grid, FormControl, Skeleton, Snackbar, Button, IconButton, Alert, AlertTitle, Paper } from '@mui/material';
 import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
+const animatedComponents = makeAnimated();
+
 const SelectionActivite = () => {
   const [data, setData] = useState(null);
   const [selectedSubclasses, setSelectedSubclasses] = useState(localStorage.getItem('selectedSubclasses') ? JSON.parse(localStorage.getItem('selectedSubclasses')) : []);
+  const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -165,9 +169,17 @@ const SelectionActivite = () => {
                 value={selectedSubclasses}
                 onChange={handleSubclassChange}
                 options={subclassesOptions}
+                components={animatedComponents}
+                closeMenuOnSelect={false}
                 placeholder="code ou libellé"
                 isSearchable
                 isMulti
+                inputValue={inputValue}
+                onInputChange={(newValue, actionMeta) => {
+                  if (actionMeta.action !== 'set-value') {
+                    setInputValue(newValue);
+                  }
+                }}
                 styles={{
                   control: (base) => ({
                     ...base,
