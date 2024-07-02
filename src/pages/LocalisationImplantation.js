@@ -99,12 +99,17 @@ const LocalisationImplantation = () => {
     }
   }, [selectedDepartments]);
 
-  //
   const handleDepartmentChange = (selectedOptions) => {
     setSelectedDepartments(selectedOptions || []);
-    setSelectedCommunes([]);
+    // Remove this line to keep previously selected communes
+    // setSelectedCommunes([]);
+    const départementNames = selectedOptions ? selectedOptions.map(option => {
+      const [code, name] = option.label.split(' - ');
+      return `${name} (${code})`;
+    }) : [];
     localStorage.setItem('selectedDepartments', JSON.stringify(selectedOptions || []));
-    localStorage.removeItem('selectedCommunes');
+    localStorage.setItem('selectedDepartementNames', JSON.stringify(départementNames));
+    //localStorage.removeItem('selectedCommunes');
   };
 
   const handleCommuneChange = (selectedOptions) => {
@@ -134,9 +139,9 @@ const LocalisationImplantation = () => {
     if (selectedDepartments.length === 0) {
       setSnackbarMessage('Veuillez sélectionner au moins un département.');
       setOpenSnackbar(true);
-    } else if (selectedCommunes.length === 0) {
-      setSnackbarMessage('Veuillez sélectionner au moins une commune.');
-      setOpenSnackbar(true);
+    //} else if (selectedCommunes.length === 0) {
+      //setSnackbarMessage('Veuillez sélectionner au moins une commune.');
+      //setOpenSnackbar(true);
     } else {
       navigate('/synthese-recherche');
     }
@@ -192,7 +197,8 @@ const LocalisationImplantation = () => {
   };
 
   const onEachFeature = useCallback((feature, layer) => {
-    layer.bindTooltip(`Commune: ${feature.properties.nom}`);
+    const tooltipContent = `<span style="color: blue;">Commune:</span> ${feature.properties.nom}`;
+    layer.bindTooltip(tooltipContent);
     layer.on({
       mouseover: () => {
         setHoveredCommune(feature.properties.code);
@@ -210,7 +216,7 @@ const LocalisationImplantation = () => {
             : [...prevSelectedCommunes, { value: communeCode, label: `${communeCode} - ${communeName}` }];
           const communeNames = newSelection.map(option => {
             const [code, name] = option.label.split(' - ');
-            return `${name}(${code})`;
+            return `${name} (${code})`;
           });
           localStorage.setItem('selectedCommunes', JSON.stringify(newSelection));
           localStorage.setItem('selectedCommuneNames', JSON.stringify(communeNames));
@@ -221,7 +227,8 @@ const LocalisationImplantation = () => {
   }, []);
 
   const onEachDepartmentFeature = useCallback((feature, layer) => {
-    layer.bindTooltip(`Département: ${feature.properties.nom}`);
+    const tooltipContent = `<span style="color: blue;">Département:</span> ${feature.properties.nom}`;
+    layer.bindTooltip(tooltipContent);
     layer.on({
       click: () => {
         const departmentCode = feature.properties.code;
@@ -231,13 +238,18 @@ const LocalisationImplantation = () => {
           const newSelection = alreadySelected
             ? prevSelectedDepartments.filter(dept => dept.value !== departmentCode)
             : [...prevSelectedDepartments, { value: departmentCode, label: `${departmentCode} - ${departmentName}` }];
+          const départementNames = newSelection.map(option => {
+            const [code, name] = option.label.split(' - ');
+            return `${name} (${code})`;
+          });
           localStorage.setItem('selectedDepartments', JSON.stringify(newSelection));
+          localStorage.setItem('selectedDepartementNames', JSON.stringify(départementNames));
           return newSelection;
         });
       }
     });
   }, []);
-
+  
   const getDepartmentStyle = (feature) => {
     return selectedDepartments.some(dept => dept.value === feature.properties.code) ? styles.selected : styles.default;
   };
@@ -319,7 +331,7 @@ const LocalisationImplantation = () => {
                 onChange={handleDepartmentChange}
                 isMulti
                 isSearchable
-                placeholder="Sélectionner des départements"
+                placeholder="code ou nom"
               />
             )}
             {selectedDepartments.length > 0 && (
@@ -334,9 +346,10 @@ const LocalisationImplantation = () => {
                     options={communes}
                     value={selectedCommunes}
                     onChange={handleCommuneChange}
+                    closeMenuOnSelect={false}
                     isMulti
                     isSearchable
-                    placeholder="Sélectionner des communes"
+                    placeholder="code ou nom"
                   />
                 )}
               </>
