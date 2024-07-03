@@ -47,13 +47,14 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
   const [communeBoundaries, setCommuneBoundaries] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedCommune, setSelectedCommune] = useState(null);
   const mapRef = useRef(null);
 
   useEffect(() => {
     if (selectedNAF && selectedCommunes.length > 0) {
       const fetchEtablissements = selectedCommunes.map(commune => {
         const codeCommune = commune.value;
-        return fetch(`https://api.insee.fr/entreprises/sirene/V3.11/siret?q=periode(activitePrincipaleEtablissement%3A${selectedNAF}%20AND%20etatAdministratifEtablissement%3AA%20AND%20-dateFin%3A*)%20AND%20codeCommuneEtablissement%3A${codeCommune}`, {
+        return fetch(`https://api.insee.fr/entreprises/sirene/V3.11/siret?q=periode(activitePrincipaleEtablissement%3A${selectedNAF}%20AND%20etatAdministratifEtablissement%3AA%20AND%20-dateFin%3A*)%20AND%20codeCommuneEtablissement%3A${codeCommune}&nombre=1000`, {
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
@@ -89,8 +90,17 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
           }
         })
         .catch(error => console.error('Error fetching commune boundaries:', error));
+      
+      // Automatically set selectedCommune to the first one in the list
+      setSelectedCommune(selectedCommunes[0].value);
     }
   }, [selectedNAF, selectedCommunes]);
+
+  useEffect(() => {
+    if (selectedCommune) {
+      zoomToCommune(selectedCommune);
+    }
+  }, [selectedCommune]);
 
   useImperativeHandle(ref, () => ({
     getEntreprisesData: () => {
@@ -122,8 +132,6 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     const y = parseFloat(replaceNDWithUndefined(adresseEtablissement.coordonneeLambertOrdonneeEtablissement));
     const coords = convertLambertToLatLng(x, y);
 
-    
-
     const denominationUsuelle = replaceNDWithUndefined(periodesEtablissement[0]?.denominationUsuelleEtablissement);
     const denominationLegale = replaceNDWithUndefined(uniteLegale?.denominationUniteLegale);
     const sigleLegale = replaceNDWithUndefined(uniteLegale?.sigleUniteLegale);
@@ -133,234 +141,137 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     const prenom = replaceNDWithUndefined(uniteLegale?.prenom1UniteLegale);
     const nom = replaceNDWithUndefined(uniteLegale?.nomUniteLegale);
 
-    let denomination = 'Indisponible';
+    let denomination = '';
 
     if (denominationUsuelle && denominationUsuelle !== "Non défini") {
-        denomination = denominationUsuelle;
+      denomination = denominationUsuelle;
     } else if (denominationLegale) {
-        denomination = denominationLegale;
+      denomination = denominationLegale;
     } else if (denominationUsuelle1) {
-        denomination = denominationUsuelle1;
+      denomination = denominationUsuelle1;
     } else if (denominationUsuelle2) {
-        denomination = denominationUsuelle2;
+      denomination = denominationUsuelle2;
     } else if (denominationUsuelle3) {
-        denomination = denominationUsuelle3;
+      denomination = denominationUsuelle3;
     } else if (prenom && nom) {
-        denomination = `${prenom.toLowerCase()} ${nom}`;
+      denomination = `${prenom.toLowerCase()} ${nom}`;
     } else if (sigleLegale) {
-        denomination = sigleLegale;
+      denomination = sigleLegale;
     }
 
     return {
-        siret: etablissement.siret,
-        denomination: denomination,
-        adresse: `${replaceNDWithUndefined(adresseEtablissement.numeroVoieEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.typeVoieEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.libelleVoieEtablissement) || ''} `,
-        commune: `${replaceNDWithUndefined(adresseEtablissement.codeCommuneEtablissement)}, ${replaceNDWithUndefined(adresseEtablissement.libelleCommuneEtablissement)}`,
-        tranchEffectifEtablissement: tranchEffectifsEtablissement[replaceNDWithUndefined(uniteLegale?.trancheEffectifsUniteLegale)] || 'Non renseigné',
-        categorieEntreprise: replaceNDWithUndefined(uniteLegale?.categorieEntreprise) || 'Non défini',
-        activitePrincipale: replaceNDWithUndefined(periodesEtablissement[0]?.activitePrincipaleEtablissement),
-        coords: coords
+      siret: etablissement.siret,
+      denomination: denomination,
+      adresse: `${replaceNDWithUndefined(adresseEtablissement.numeroVoieEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.typeVoieEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.libelleVoieEtablissement) || ''} `,
+      commune: `${replaceNDWithUndefined(adresseEtablissement.codePostalEtablissement) || ''} ${replaceNDWithUndefined(adresseEtablissement.libelleCommuneEtablissement) || ''}`,
+      naf: replaceNDWithUndefined(periodesEtablissement[0]?.activitePrincipaleEtablissement),
+      trancheEffectifs: tranchEffectifsEtablissement[replaceNDWithUndefined(periodesEtablissement[0]?.trancheEffectifsEtablissement)] || replaceNDWithUndefined(periodesEtablissement[0]?.trancheEffectifsEtablissement),
+      coords: coords,
     };
-};
-
-const handleDownload = () => {
-  const data = etablissements.map(transformData).map(({ coords, ...rest }) => rest);
-  const worksheet = XLSX.utils.json_to_sheet(data);
-
-  // Create workbook and add the worksheet
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Entreprises');
-
-  // Define styles
-  const headerStyle = { 
-    font: { bold: true, sz: 14, color: { rgb: "000000" } },
-    alignment: { horizontal: 'center', vertical: 'center' },
-    fill: { fgColor: { rgb: "FFFFF0" } }, // Light yellow background
-    padding: { top: 10 } // Add padding on top
   };
-  const rowStyle = { alignment: { vertical: 'center' } };
 
-  // Apply styles to the header and capitalize first letter
-  const range = XLSX.utils.decode_range(worksheet['!ref']);
-
-  for (let C = range.s.c; C <= range.e.c; ++C) {
-    const address = XLSX.utils.encode_col(C) + '1';
-    if (!worksheet[address]) continue;
-    
-    // Capitalize first letter of the header
-    const headerText = worksheet[address].v;
-    worksheet[address].v = headerText.charAt(0).toUpperCase() + headerText.slice(1);
-
-    if (!worksheet[address].s) worksheet[address].s = {};
-    worksheet[address].s = { ...worksheet[address].s, ...headerStyle };
-  }
-
-  // Apply styles to the rows and set row heights
-  for (let R = range.s.r + 1; R <= range.e.r; ++R) { // Start from second row
-    for (let C = range.s.c; C <= range.e.c; ++C) {
-      const cell_address = XLSX.utils.encode_cell({ c: C, r: R });
-      if (!worksheet[cell_address]) continue;
-      if (!worksheet[cell_address].s) worksheet[cell_address].s = {};
-      worksheet[cell_address].s = { ...worksheet[cell_address].s, ...rowStyle };
-    }
-    if (!worksheet['!rows']) worksheet['!rows'] = [];
-    worksheet['!rows'][R] = { hpx: 20 }; // Set row height to 20 pixels
-  }
-
-  // Set header row height
-  if (!worksheet['!rows']) worksheet['!rows'] = [];
-  worksheet['!rows'][0] = { hpx: 30 }; // Set header row height to 40 pixels
-
-  // Adjust column widths
-  const colWidths = [];
-  for (let C = range.s.c; C <= range.e.c; ++C) {
-    colWidths.push({ wpx: 150 }); // Set column width to 150 pixels
-  }
-  worksheet['!cols'] = colWidths;
-
-  // Write the workbook
-  XLSX.writeFile(workbook, 'Entreprises.xlsx');
-};
-
-
-  const handleChangePage = (event, newPage) => {
+  const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const HeaderContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: '#286AC7', // Desired background color
-    paddingTop: theme.spacing(2),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingRight: theme.spacing(2),
-    color: 'white',
-    marginBottom: '20px'
-  }));
+  const zoomToCommune = (communeCode) => {
+    if (communeBoundaries) {
+      const communeFeature = communeBoundaries.features.find(
+        feature => feature.properties.code === communeCode
+      );
+      if (communeFeature) {
+        const bounds = L.geoJSON(communeFeature).getBounds();
+        if (mapRef.current) {
+          mapRef.current.fitBounds(bounds);
+        }
+      }
+    }
+  };
 
   return (
-    <Box height="100%" style={{ overflowY: 'auto' }}>
-      <HeaderContainer>
-        <Typography variant="h5" style={{ marginBottom: '40px', marginLeft: '40px' }}>
-          Données Statistiques Entreprises
+    <Box display="flex" flexDirection="row">
+      <Box flex="1">
+        <Typography variant="h6" gutterBottom>
+          Liste des Entreprises
         </Typography>
-        <IconButton 
-          onClick={handleDownload} 
-          style={{ 
-            color: 'white', 
-            marginBottom: '40px',
-            display: 'flex', 
-            alignItems: 'center',
-            transition: 'background-color 0.3s, color 0.3s',
-            padding: '5px 10px',
-            borderRadius: '5px'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-            e.currentTarget.style.color = 'white';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '';
-            e.currentTarget.style.color = 'white';
-          }}
-        >
-          <GetAppIcon style={{ color: 'white', fontSize: '20px' }} />
-          <span style={{ color: 'white', fontSize: '17px', marginLeft: '9px' }}>Télécharger</span>
-        </IconButton>
-      </HeaderContainer>
-      <Box style={{ height: '600px', width: '100%' }}>
-        <MapContainer 
-          center={[46.603354, 1.888334]} 
-          zoom={6} 
-          style={{ height: '100%', width: '100%' }}
-          whenCreated={map => { mapRef.current = map; }}
-        >
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Dénomination</TableCell>
+                <TableCell>Adresse</TableCell>
+                <TableCell>Commune</TableCell>
+                <TableCell>NAF</TableCell>
+                <TableCell>Tranche Effectifs</TableCell>
+                <TableCell>Export</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {etablissements
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((etablissement, index) => {
+                  const data = transformData(etablissement);
+                  return (
+                    <TableRow key={etablissement.siret}>
+                      <TableCell>{data.denomination}</TableCell>
+                      <TableCell>{data.adresse}</TableCell>
+                      <TableCell>{data.commune}</TableCell>
+                      <TableCell>{data.naf}</TableCell>
+                      <TableCell>{data.trancheEffectifs}</TableCell>
+                      <TableCell>
+                        <IconButton >
+                          <GetAppIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+          <TablePagination
+            component="div"
+            count={etablissements.length}
+            page={page}
+            onPageChange={handlePageChange}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            rowsPerPageOptions={[5, 10, 25]}
+          />
+        </TableContainer>
+      </Box>
+      <Box flex="1" ml={2}>
+        <MapContainer center={[46.603354, 1.888334]} zoom={6} ref={mapRef} style={{ height: '500px' }}>
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           {communeBoundaries && (
-            <GeoJSON 
-              data={communeBoundaries} 
-              style={{ color: 'blue', weight: 2 }} 
+            <GeoJSON
+              data={communeBoundaries}
+              style={{ weight: 1, color: '#1E90FF' }}
             />
           )}
-          {etablissements
-            .filter(etablissement =>
-              replaceNDWithUndefined(etablissement.adresseEtablissement.coordonneeLambertAbscisseEtablissement) !== "Non défini" &&
-              replaceNDWithUndefined(etablissement.adresseEtablissement.coordonneeLambertOrdonneeEtablissement) !== "Non défini" &&
-              !isNaN(parseFloat(etablissement.adresseEtablissement.coordonneeLambertAbscisseEtablissement)) &&
-              !isNaN(parseFloat(etablissement.adresseEtablissement.coordonneeLambertOrdonneeEtablissement))
-            )
-            .map((etablissement, index) => {
-              const transformedData = transformData(etablissement);
-              if (!transformedData.coords) {
-                console.warn(`Invalid coordinates for establishment ${index}: (${transformedData.coords})`, etablissement);
-                return null;
-              }
-
-              return (
-                <Marker key={index} position={transformedData.coords}>
+          {etablissements.map(etablissement => {
+            const data = transformData(etablissement);
+            return (
+              data.coords && (
+                <Marker key={etablissement.siret} position={data.coords}>
                   <Popup>
-                    <strong style={{ color: 'blue' }}>Siret: </strong> {transformedData.siret}<br />
-                    <strong style={{ color: 'blue' }}>Dénomination: </strong> {transformedData.denomination}<br />
-                    <strong style={{ color: 'blue' }}>Adresse: </strong> {transformedData.adresse}<br />
-                    <strong style={{ color: 'blue' }}>Commune: </strong> {transformedData.commune}<br />
-                    <strong style={{ color: 'blue' }}>Effectif: </strong> {transformedData.tranchEffectifEtablissement}<br />
-                    <strong style={{ color: 'blue' }}>Catégorie: </strong> {transformedData.categorieEntreprise}<br />
-                    <strong style={{ color: 'blue' }}>APE: </strong> {transformedData.activitePrincipale}<br />
+                    <Typography variant="body1">{data.denomination}</Typography>
+                    <Typography variant="body2">{data.adresse}</Typography>
+                    <Typography variant="body2">{data.commune}</Typography>
                   </Popup>
                 </Marker>
-              );
-            })}
+              )
+            );
+          })}
         </MapContainer>
       </Box>
-      <TableContainer component={Paper} style={{ marginTop: '20px' }}>
-        <Table aria-label="simple table">
-          <TableHead style={{ backgroundColor: 'grey' }}>
-            <TableRow>
-              <TableCell style={{ color: 'white' }}>Siret</TableCell>
-              <TableCell style={{ color: 'white' }}>Dénomination</TableCell>
-              <TableCell style={{ color: 'white' }}>Adresse</TableCell>
-              <TableCell style={{ color: 'white' }}>Commune</TableCell>
-              <TableCell style={{ color: 'white' }}>Tranche Effectifs</TableCell>
-              <TableCell style={{ color: 'white' }}>Catégorie</TableCell>
-              <TableCell style={{ color: 'white' }}>Activité principale</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {etablissements.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((etablissement, index) => {
-              const transformedData = transformData(etablissement);
-              return (
-                <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : 'white' }}>
-                  <TableCell>{transformedData.siret}</TableCell>
-                  <TableCell>{transformedData.denomination}</TableCell>
-                  <TableCell>{transformedData.adresse}</TableCell>
-                  <TableCell>{transformedData.commune}</TableCell>
-                  <TableCell>{transformedData.tranchEffectifEtablissement}</TableCell>
-                  <TableCell>{transformedData.categorieEntreprise}</TableCell>
-                  <TableCell>{transformedData.activitePrincipale}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50]}
-          component="div"
-          count={etablissements.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Lignes par page:"
-        />
-      </TableContainer>
     </Box>
   );
 });
