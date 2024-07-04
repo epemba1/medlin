@@ -7,7 +7,7 @@ import { GetApp as GetAppIcon } from '@mui/icons-material';
 import * as XLSX from 'xlsx';
 import proj4 from 'proj4';
 
-// Fix for missing marker icons
+// Fix for missings marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
