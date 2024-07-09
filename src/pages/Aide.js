@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Container, Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Import the icon you want to use
 
+//Question mark
 const Aide = memo(() => {
   const faqs = [
     {
