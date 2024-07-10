@@ -1,0 +1,116 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import pLimit from 'p-limit';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+
+const mapRevenu = () => {
+  const [geoJsonData, setGeoJsonData] = useState(null);
+  const [inseeData, setInseeData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const token = 'c1962a62-85fd-3e69-94a8-9a23ea7306a6';
+  const maxConcurrentRequests = 10; // Augmenté pour accélérer le chargement initial
+
+  useEffect(() => {
+    const fetchInseeData = async (code, retries = 5, delay = 1000) => {
+      try {
+        const response = await axios.get(
+          `https://api.insee.fr/donnees-locales/V0.1/donnees/geo-INDICS_FILO_DISP@GEO2023FILO2020_BV/DEP-${code}.all?mesure=MEDIANE`,
+          { 
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const deptCode = response.data.Zone["@codgeo"];
+        const mediane = response.data.Cellule?.find((cell) => cell.Mesure["@code"] === "MEDIANE")?.Valeur;
+        if (!mediane) {
+          throw new Error("Mediane not found");
+        }
+        return { deptCode, mediane };
+      } catch (error) {
+        if (error.response && error.response.status === 429 && retries > 0) {
+          const jitter = Math.random() * 500; // Adding a random jitter
+          const newDelay = delay * 2 + jitter;
+          console.warn(`Rate limit exceeded for DEP-${code}. Retrying in ${Math.round(newDelay)} ms...`);
+          await new Promise(resolve => setTimeout(resolve, newDelay));
+          return fetchInseeData(code, retries - 1, newDelay); // Retry with exponential backoff and jitter
+        } else {
+          console.error(`Error fetching data for DEP-${code}:`, error);
+          return null;
+        }
+      }
+    };
+
+    axios.get('/contour-des-departements.geojson')
+      .then(response => {
+        const data = response.data;
+        setGeoJsonData(data);
+        const departmentCodes = data.features.map(dept => dept.properties.code);
+        const limit = pLimit(maxConcurrentRequests);
+
+        const inseePromises = departmentCodes.map(code => limit(() => fetchInseeData(code)));
+
+        return Promise.all(inseePromises);
+      })
+      .then(results => {
+        const inseeData = results.reduce((acc, result) => {
+          if (result) {
+            acc[result.deptCode] = result.mediane;
+          }
+          return acc;
+        }, {});
+        setInseeData(inseeData);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching GeoJSON data:', error);
+        setLoading(false);
+      });
+  }, [token]);
+
+  const getColor = (mediane, minMediane, maxMediane) => {
+    const colors = ['#fff5eb', '#fee6ce', '#fdd0a2', '#fdae6b', '#fd8d3c', '#f16913', '#d94801', '#a63603', '#7f2704'];
+    
+    if (!mediane) return '#EFEBE9'; // Pas de données disponibles
+
+    const index = Math.floor((mediane - minMediane) / (maxMediane - minMediane) * (colors.length - 1));
+    return colors[index];
+  };
+
+  const onEachFeature = (feature, layer) => {
+    const deptCode = feature.properties.code;
+    const mediane = inseeData[deptCode];
+    const medianes = Object.values(inseeData).filter(Boolean); // Toutes les valeurs de médiane disponibles
+    const minMediane = Math.min(...medianes);
+    const maxMediane = Math.max(...medianes);
+    const color = getColor(mediane, minMediane, maxMediane);
+
+    layer.setStyle({
+      fillColor: color,
+      weight: 2,
+      opacity: 1,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.7
+    });
+
+    layer.bindPopup(`<b>${feature.properties.nom}</b><br>Médiane des revenus: ${mediane ? mediane + '€' : 'Données non disponibles'}`);
+  };
+
+  return (
+    <div style={{ height: '100vh', width: '100%' }}>
+      {!loading && geoJsonData && ( 
+        <MapContainer center={[46.603354, 1.888334]} zoom={6} style={{ height: '100%', width: '100%' }}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <GeoJSON data={geoJsonData} onEachFeature={onEachFeature} />
+        </MapContainer>
+      )}
+    </div>
+  );
+};
+
+export default mapRevenu;
