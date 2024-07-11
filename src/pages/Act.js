@@ -10,6 +10,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 const animatedComponents = makeAnimated();
 
+//
 const SelectionActivite = () => {
   const [data, setData] = useState(null);
   const [selectedSubclasses, setSelectedSubclasses] = useState(localStorage.getItem('selectedSubclasses') ? JSON.parse(localStorage.getItem('selectedSubclasses')) : []);
