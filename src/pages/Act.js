@@ -91,6 +91,7 @@ const SelectionActivite = () => {
     );
   }
 
+//
   const subclassesOptions = Object.values(data?.subclasses || {}).flat();
 
   return (
