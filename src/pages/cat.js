@@ -42,6 +42,7 @@ const tranchEffectifsEtablissement = {
   '53': '10 000 salariés et plus',
 };
 
+List of CJ
 const categoriesJuridiques = {
   '0000': 'Organisme de placement collectif en valeurs mobilières sans personnalité morale',
   '1000': 'Entrepreneur individuel',
