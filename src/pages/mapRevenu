@@ -4,6 +4,7 @@ import pLimit from 'p-limit';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
+//Display the revenu data
 const mapRevenu = () => {
   const [geoJsonData, setGeoJsonData] = useState(null);
   const [inseeData, setInseeData] = useState({});
