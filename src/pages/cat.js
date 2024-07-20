@@ -487,7 +487,7 @@ const handleDownload = () => {
     worksheet[address].s = { ...worksheet[address].s, ...headerStyle };
   }
 
-  // Apply styles to the rows and set row heights
+  // Applyy styles to the rows and set row heights
   for (let R = range.s.r + 1; R <= range.e.r; ++R) { // Start from second row
     for (let C = range.s.c; C <= range.e.c; ++C) {
       const cell_address = XLSX.utils.encode_cell({ c: C, r: R });
