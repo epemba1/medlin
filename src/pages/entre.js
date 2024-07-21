@@ -18,7 +18,6 @@ L.Icon.Default.mergeOptions({
   shadowSize: [41, 41],
 });
 
-// Define Lambert 93 projection
 const lambert93 = '+proj=lcc +lat_1=44.0 +lat_2=49.0 +lat_0=46.5 +lon_0=3.0 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs';
 const wgs84 = '+proj=longlat +datum=WGS84 +no_defs';
 
