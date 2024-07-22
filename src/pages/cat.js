@@ -462,7 +462,6 @@ const handleDownload = () => {
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Entreprises');
 
-  // Define styles
   const headerStyle = { 
     font: { bold: true, sz: 14, color: { rgb: "000000" } },
     alignment: { horizontal: 'center', vertical: 'center' },
