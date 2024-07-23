@@ -17,6 +17,7 @@ const SyntheseRecherche = () => {
 
   const navigate = useNavigate();
 
+  //Fetch data
   useEffect(() => {
     const naf = localStorage.getItem('selectedNAF');
     const naf1 = localStorage.getItem('selectedNAF1');
