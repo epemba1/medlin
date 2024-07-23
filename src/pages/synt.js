@@ -6,6 +6,7 @@ import EntreprisesTab from './EntreprisesTab';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
+//
 const SyntheseRecherche = () => {
   const [selectedNAF, setSelectedNAF] = useState('');
   const [selectedNAF1, setSelectedNAF1] = useState('');
