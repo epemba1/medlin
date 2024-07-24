@@ -13,7 +13,7 @@ const fetchData = async (codes, urlTemplate) => {
     try {
       const response = await axios.get(urlTemplate.replace('{code}', code), {
         headers: {
-          Authorization: 'Bearer c1962a62-85fd-3e69-94a8-9a23ea7306a6'
+          Authorization: ''
         }
       });
       return response.data;
