@@ -154,7 +154,7 @@ const Menage = forwardRef(({ communeCodes = [], departmentCodes = [] }, ref) => 
 
   const tableData = transformDataForTable(data);
 
-  // Move the last row to the second index
+  // Move the last row
   if (tableData.length > 1) {
     const lastRow = tableData.pop();
     tableData.splice(0, 0, lastRow);
