@@ -140,7 +140,7 @@ const LocalisationImplantation = () => {
     if (selectedDepartments.length === 0) {
       setSnackbarMessage('Veuillez sélectionner au moins un département.');
       setOpenSnackbar(true);
-    //} else if (selectedCommunes.length === 0) {
+    } else if (selectedCommunes.length === 0) {
       //setSnackbarMessage('Veuillez sélectionner au moins une commune.');
       //setOpenSnackbar(true);
     } else {
