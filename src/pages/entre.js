@@ -39,7 +39,7 @@ const tranchEffectifsEtablissement = {
   '53': '10 000 salariés et plus',
 };
 
-//
+// Use hooks
 const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
   const [etablissements, setEtablissements] = useState([]);
   const [communeBoundaries, setCommuneBoundaries] = useState(null);
