@@ -56,7 +56,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
   });
   const mapRef = useRef(null);
 
-  //
+  // Fetch data
   useEffect(() => {
     if (selectedNAF && selectedCommunes.length > 0) {
       const fetchEtablissements = selectedCommunes.map(commune => {
