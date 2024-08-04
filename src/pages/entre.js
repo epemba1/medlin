@@ -109,7 +109,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     },
   }));
 
-  //Convert Lambert into WGS884
+  //Convert Lambert93 into WGS884
   const convertLambertToLatLng = (x, y) => {
     if (x === null || y === null || isNaN(x) || isNaN(y)) {
       return null;
