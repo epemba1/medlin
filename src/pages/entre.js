@@ -104,7 +104,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     }
   }, [selectedNAF, selectedCommunes]);
 
-  //
+  //Transfer data manually
   useImperativeHandle(ref, () => ({
     getEntreprisesData: () => {
       return etablissements.map(etablissement => transformData(etablissement));
