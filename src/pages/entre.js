@@ -187,6 +187,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     setPage(0);
   };
 
+  //Export the file 
   const handleDownload = () => {
     const worksheet = XLSX.utils.json_to_sheet(etablissements.map(etablissement => transformData(etablissement)));
     const workbook = XLSX.utils.book_new();
