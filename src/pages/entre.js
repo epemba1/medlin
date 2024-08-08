@@ -212,7 +212,7 @@ const EntreprisesTab = forwardRef(({ selectedNAF, selectedCommunes }, ref) => {
     });
   });
 
-  //
+  //Sort Etablissement data
   const sortedEtablissements = filteredEtablissements.sort((a, b) => {
     const denomA = a.denominationUniteLegale || '';
     const denomB = b.denominationUniteLegale || '';
